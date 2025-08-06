@@ -7,8 +7,7 @@ const router = express.Router();
 router.get("/apartment/new", getNewApartment);
 
 // endpoint AÑADIR APARTMENTO - POST - INSERTAR APARTAMENTO EN LA BASE DE DATOS
-router.post("/apartment", postNewApartment);
-
+router.post("/apartment/add-new", postNewApartment);
 
 //endpoint FORMULARIO PARA EDITAR APARTAMENTO 
 router.get("/apartment/:id/edit", getEditApartment);

@@ -1,8 +1,8 @@
 import { Apartment } from "../models/Apartment.model.js";
 
-export const getNewApartment = (req, res)=> {
-    
-    
+export const getNewApartment = (req, res) => {
+
+
     res.render("add-apartment.ejs", {
         apartment: {},
         editMode: false
@@ -10,40 +10,84 @@ export const getNewApartment = (req, res)=> {
 
 };
 
-export const postNewApartment = async (req, res)=> {
-
-    const { title, city, price, size, mainPhoto} = req.body;
-
-    // Validación básica
-    if (!title || title.length > 40 || !city) {
-        return res.status(400).send('Ups! Validación en el controlador. Algo ha ido mal! Hemos informado a los desarrolladores. <a href="/">Volver al HOME</a>');
-    }
-
+export const postNewApartment = async (req, res) => {
     try {
-        await Apartment.create({
-            title: title,
-            city: city,
-            price: price,
-            squareMeters: size,
-            mainPhoto: mainPhoto,
-            services: {
-                wifi: false,
-                parking: false,
-                disability: false
-            }
+        const {
+            title,
+            description,
+            rules,
+            rooms,
+            beds,
+            bathrooms,
+            price,
+            squareMeters,
+            maxGuests,
+            province,
+            city,
+            gpsLat,
+            gpsLng,
+            mapLink,
+            services,
+            photos
+        } = req.body;
+
+        // Procesar fotos
+        const processedPhotos = Array.isArray(photos)
+            ? photos.map(photo => ({
+                url: photo.url,
+                description: photo.description,
+                isMain: photo.isMain === 'true' || photo.isMain === true
+            }))
+            : Object.values(photos || {}).map(p => ({
+                url: p.url,
+                description: p.description,
+                isMain: p.isMain === 'true' || p.isMain === true
+            }));
+
+        // Procesar servicios con valores booleanos
+        const processedServices = {
+            wifi: !!services?.wifi,
+            parking: !!services?.parking,
+            disability: !!services?.disability,
+            airConditioning: !!services?.airConditioning,
+            heating: !!services?.heating,
+            tv: !!services?.tv,
+            kitchen: !!services?.kitchen,
+            internet: !!services?.internet
+        };
+
+        // Crear nuevo apartamento
+        const newApartment = new Apartment({
+            title,
+            description,
+            rules,
+            rooms: Number(rooms),
+            beds: Number(beds),
+            bathrooms: Number(bathrooms),
+            price: Number(price),
+            squareMeters: Number(squareMeters),
+            maxGuests: Number(maxGuests),
+            location: {
+                province,
+                city,
+                gps: {
+                    lat: gpsLat ? Number(gpsLat) : undefined,
+                    lng: gpsLng ? Number(gpsLng) : undefined
+                },
+                mapLink
+            },
+            services: processedServices,
+            photos: processedPhotos
         });
 
-        // Actualizamos la variable 'info' de req.session.info para informar al cliente de que se ha añadido el apartamento corectamente
-        req.session.info = "Apartamento añadido correctamente a la base de datos";
+        await newApartment.save();
 
-        // TODO: A lo mejor lo que tendría que pasar aquí realmente es redirigir al usaurio a la vista detalle del apartamento /apartment/{identificadorApartamento}
+        req.session.info = 'Apartamento añadido correctamente a la base de datos';
         res.redirect('/');
-
     } catch (error) {
-        res.send('Ups! Algo ha ido mal! Hemos informado a los desarrolladres. <a href="/">Volver al HOME</a>');
-        console.log(error.message);
+        console.error('❌ Error al guardar apartamento:', error);
+        res.status(500).send('Error al crear apartamento. <a href="/">Volver al HOME</a>');
     }
-
 };
 
 export const getEditApartment = async (req, res) => {
@@ -60,23 +104,91 @@ export const getEditApartment = async (req, res) => {
 }
 
 export const postEditApartment = async (req, res) => {
-    // La petición es de tipo POST, todos los datos del formulario deberían estar en req.body
-    // El ID del apartamento, lo tenemos en req.params.id
+    // Obtenemos el ID del apartamento desde la URL
     const id = req.params.id;
-    console.log("🚀 ~ postEditApartment ~ id:", id)
-    
-    // Actualizar el documento de la base de datos dado su id
-    await Apartment.findByIdAndUpdate(id, {
-        title: req.body.title,
-        city: req.body.city,
-        price: req.body.price,
-        squareMeters: req.body.size,
-        mainPhoto: req.body.mainPhoto
-    });
+    console.log("🛠 Editando apartamento con ID:", id);
 
-    // TODO: Faltaria algún mensaje de confirmacion
-    res.redirect(`/apartment/${id}`)
-}
+    try {
+        // Extraemos todos los datos enviados desde el formulario
+        const {
+            title,
+            description,
+            rules,
+            rooms,
+            beds,
+            bathrooms,
+            price,
+            squareMeters,
+            maxGuests,
+            province,
+            city,
+            gpsLat,
+            gpsLng,
+            mapLink,
+            services,
+            photos
+        } = req.body;
+
+        // Procesamos el array de fotos que viene del formulario
+        const processedPhotos = Array.isArray(photos)
+            ? photos.map(photo => ({
+                url: photo.url,
+                description: photo.description,
+                isMain: photo.isMain === 'true' || photo.isMain === true
+            }))
+            : Object.values(photos || {}).map(p => ({
+                url: p.url,
+                description: p.description,
+                isMain: p.isMain === 'true' || p.isMain === true
+            }));
+
+        // Procesamos los servicios para asegurarnos que estén en formato booleano
+        const processedServices = {
+            wifi: !!services?.wifi,
+            parking: !!services?.parking,
+            disability: !!services?.disability,
+            airConditioning: !!services?.airConditioning,
+            heating: !!services?.heating,
+            tv: !!services?.tv,
+            kitchen: !!services?.kitchen,
+            internet: !!services?.internet
+        };
+
+        // Creamos el objeto que contiene todos los cambios a guardar
+        const updatedData = {
+            title,
+            description,
+            rules,
+            rooms: Number(rooms),
+            beds: Number(beds),
+            bathrooms: Number(bathrooms),
+            price: Number(price),
+            squareMeters: Number(squareMeters),
+            maxGuests: Number(maxGuests),
+            location: {
+                province,
+                city,
+                gps: {
+                    lat: gpsLat ? Number(gpsLat) : undefined,
+                    lng: gpsLng ? Number(gpsLng) : undefined
+                },
+                mapLink
+            },
+            services: processedServices,
+            photos: processedPhotos
+        };
+
+        // Usamos findByIdAndUpdate para aplicar los cambios en MongoDB
+        await Apartment.findByIdAndUpdate(id, updatedData);
+
+        // Redireccionamos al detalle del apartamento actualizado
+        res.redirect(`/apartment/${id}`);
+    } catch (error) {
+        // Si algo falla, mostramos error y log
+        console.error('❌ Error al editar apartamento:', error);
+        res.status(500).send('Error al editar apartamento. <a href="/">Volver al HOME</a>');
+    }
+};
 
 export const deleteApartment = async (req, res) => {
     // 1. Obtener el id del apartmento

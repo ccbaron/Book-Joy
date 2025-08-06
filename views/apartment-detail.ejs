@@ -1,39 +1,133 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <title> Detalle del apartamento</title>
-    <%- include('./partials/head.ejs') %>
 
+<head>
+    <title>Detalle del apartamento</title>
+    <%- include('./partials/head.ejs') %>
 </head>
+
 <body>
-     <header class="container-fluid">
-    <%- include('./partials/header.ejs') %>
-  </header>
- 
-    <main class="container" >
-        <section>
-            <header><%= apartment.title %></header>
-            <article><img src="<%= apartment.mainPhoto %>" alt=""></article>
-            <footer><%= apartment.price %> € | <%= apartment.squareMeters %> m<sup>2</sup> </footer>
-        </section>
-        <section id="reservation">
-          <div class="container">
-            <% if (isAuthenticated) { %>
-                <a href="/admin/apartment/<%= apartment._id %>/edit/">Editar apartamento</a>
-                <% } else { %>
-                    <h2>Datos de la reserva</h2>
-                    <form action="/apartment/reservation/new" method="post">
-                        <input type="hidden" name="idApartment" value="<%= apartment._id %>">
-                        <label for="email">Email:</label>
-                        <input type="email" name="email" id="email" required>
-                        <label for="startDate">Fecha de inicio </label>
-                        <input type="date" name="startDate" id="startDate">
-                        <label for="endDate">Fecha de fin</label>
-                        <input type="date" name="endDate" id="endDate">
-                        <input type="submit" value="Reservar">
-                    </form>
-                    <% } %>
-        </section>
+    <header class="container-fluid">
+        <%- include('./partials/header.ejs') %>
+    </header>
+
+    <main class="container" style="width: 60%;">
+
+        <!-- Título -->
+        <h1>
+            <%= apartment.title %>
+        </h1>
+
+        <!-- Imagen principal -->
+        <% const mainPhoto=apartment.photos?.find(p=> p.isMain) || apartment.photos?.[0]; %>
+            <% if (mainPhoto) { %>
+                <img src="<%= mainPhoto.url %>" alt="Foto principal del apartamento"
+                    style="width:100%; max-height: 400px; object-fit: cover;">
+                <% } %>
+
+                    <!-- Descripción y reglas -->
+                    <p><strong>Descripción:</strong>
+                        <%= apartment.description || 'No disponible' %>
+                    </p>
+                    <p><strong>Reglas:</strong>
+                        <%= apartment.rules || 'No especificadas' %>
+                    </p>
+
+                    <!-- Detalles -->
+                    <ul>
+                        <li><strong>Precio por noche:</strong> €<%= apartment.price %>
+                        </li>
+                        <li><strong>Superficie:</strong>
+                            <%= apartment.squareMeters %> m²
+                        </li>
+                        <li><strong>Capacidad máxima:</strong>
+                            <%= apartment.maxGuests || 'No definida' %> personas
+                        </li>
+                        <li><strong>Habitaciones:</strong>
+                            <%= apartment.rooms %>
+                        </li>
+                        <li><strong>Camas:</strong>
+                            <%= apartment.beds %>
+                        </li>
+                        <li><strong>Baños:</strong>
+                            <%= apartment.bathrooms %>
+                        </li>
+                    </ul>
+
+                    <!-- Servicios -->
+                    <h3>Servicios</h3>
+                    <ul>
+                        <% for (let [key, value] of Object.entries(apartment.services)) { %>
+                            <% if (value) { %>
+                                <li>
+                                    <%= key %>
+                                </li>
+                                <% } %>
+                                    <% } %>
+                    </ul>
+
+                    <!-- Ubicación -->
+                    <h3>Ubicación</h3>
+                    <p>
+                        <%= apartment.location?.city %>, <%= apartment.location?.province %>
+                    </p>
+
+                    <% if (apartment.location?.mapLink) { %>
+                        <a href="<%= apartment.location.mapLink %>" target="_blank">Ver en Google Maps</a>
+                        <% } %>
+
+                            <% if (apartment.location?.gps?.lat && apartment.location?.gps?.lng) { %>
+                                <iframe width="100%" height="300" frameborder="0" style="border:0"
+                                    src="https://maps.google.com/maps?q=<%= apartment.location.gps.lat %>,<%= apartment.location.gps.lng %>&z=15&output=embed"
+                                    allowfullscreen>
+                                </iframe>
+                                <% } %>
+
+                                    <!-- Galería de fotos -->
+                                    <% if (apartment.photos && apartment.photos.length> 1) { %>
+                                        <h3>Galería</h3>
+                                        <div class="grid">
+                                            <% apartment.photos.forEach(photo=> { %>
+                                                <figure>
+                                                    <img src="<%= photo.url %>"
+                                                        alt="<%= photo.description || 'Foto del apartamento' %>"
+                                                        style="max-width:100%">
+                                                    <% if (photo.description) { %>
+                                                        <figcaption>
+                                                            <%= photo.description %>
+                                                        </figcaption>
+                                                        <% } %>
+                                                </figure>
+                                                <% }); %>
+                                        </div>
+                                        <% } %>
+
+                                            <!-- Formulario de reserva -->
+                                            <section id="reservation">
+                                                <% if (isAuthenticated) { %>
+                                                    <a href="/admin/apartment/<%= apartment._id %>/edit/">Editar
+                                                        apartamento</a>
+                                                    <% } else { %>
+                                                        <h2>Datos de la reserva</h2>
+                                                        <form action="/apartment/reservation/new" method="post">
+                                                            <input type="hidden" name="idApartment"
+                                                                value="<%= apartment._id %>">
+
+                                                            <label for="email">Email:</label>
+                                                            <input type="email" name="email" id="email" required>
+
+                                                            <label for="startDate">Fecha de inicio</label>
+                                                            <input type="date" name="startDate" id="startDate" required>
+
+                                                            <label for="endDate">Fecha de fin</label>
+                                                            <input type="date" name="endDate" id="endDate" required>
+
+                                                            <input type="submit" value="Reservar">
+                                                        </form>
+                                                        <% } %>
+                                            </section>
+
     </main>
 </body>
+
 </html>

@@ -19,23 +19,25 @@
             <input type="number" name="maxPrice" id="maxPrice" value="<%= filters.maxPrice %>" required>
             <input type="submit" value="Buscar">
         </form>
-        <section>
-            <% allApartments.forEach(function(apt) { %>
 
+        <section>
+            <% allApartments.forEach(function(apt) { const mainPhoto=apt.photos?.find(p=> p.isMain) || apt.photos?.[0] || {}; %>
                 <a href="/apartment/<%= apt._id %>">
                     <article>
                         <header>
                             <%= apt.title %>
                         </header>
-                        <img src="<%= apt.mainPhoto %>" alt="<%= apt.title %>">
+                        <img src="<%= mainPhoto.url || '/placeholder.jpg' %>" alt="<%= apt.title %>"
+                            style="width: 100%;">
                         <footer>
                             <%= apt.price %> €
                         </footer>
                     </article>
                 </a>
                 <% }); %>
-
         </section>
+
+
     </main>
 </body>
 

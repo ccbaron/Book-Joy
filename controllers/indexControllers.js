@@ -1,13 +1,13 @@
 import { Apartment } from '../models/Apartment.model.js';
 
-export const getApartments = async (req, res)=> {
-   // 1. Recuperar los datos del Modelo (Apartment)
+export const getApartments = async (req, res) => {
+    // 1. Recuperar los datos del Modelo (Apartment)
     const allApartments = await Apartment.find();
     console.log("🚀 ~ app.get ~ allApartments:", allApartments)
 
     // TODO: Buscar el precio máximo de todos mis apartamentos en la base de datos. Establecer ese valor en filters.maxPrice
 
-   // 2. Este endpoint va a pasar los datos una vista
+    // 2. Este endpoint va a pasar los datos una vista
     res.render('home.ejs', {
         allApartments,
         filters: {
@@ -16,51 +16,81 @@ export const getApartments = async (req, res)=> {
     })
 };
 
-export const getApartmentById = async (req, res)=> {
-
-    // 1. Recuperar del modelo el documento identificado con el id :id
+export const getApartmentById = async (req, res) => {
     const apartment = await Apartment.findById(req.params.id);
 
-    // 2. Crear una vista de nombre apartment-detail.ejs
+    if (!apartment) {
+        return res.status(404).send('Apartamento no encontrado');
+    }
 
-    // 3. PAsar a esta vista el objeto apartamento
+    // Convertimos a objeto plano para que EJS no muestre metadatos de Mongoose
+    const plainApartment = apartment.toObject();
+
     res.render("apartment-detail.ejs", {
-        apartment
-    })
-
+        apartment: plainApartment
+    });
 }
+
 
 export const postNewReservation = async (req, res) => {
-    // 1. Obtener el email, fecha de inicio de la reserva, y fecha de fin
-    const {idApartment, email, startDate, endDate} = req.body;
-    
-    // 2 Obtener el ID del apartamento a reservar
-    const reservedApartment = await Apartment.findById(idApartment);
-    
-    // 3. Añadir un nuevo objeto al campo apartment.reservations
-    reservedApartment.reservations.push({
-        email,
-        startDate,
-        endDate
+
+    // 1. Recibir datos del formulario
+    const { idApartment, email, startDate, endDate } = req.body;
+
+    // 2. Buscar el apartamento por su ID
+    const apartment = await Apartment.findById(idApartment);
+
+    if (!apartment) {
+        return res.status(404).send("Apartamento no encontrado");
+    }
+
+    // 3. Comprobamos si ya hay alguna reserva que se solape con las fechas pedidas
+    const isDateTaken = apartment.reservations.some((r) => {
+
+        // Convertimos las fechas a objetos Date
+        const existingStart = new Date(r.startDate);
+        const existingEnd = new Date(r.endDate);
+        const newStart = new Date(startDate);
+        const newEnd = new Date(endDate);
+
+        // Regla de solapamiento: hay cruce si:
+        return newStart <= existingEnd && newEnd >= existingStart;
     });
 
-    // 4. Salvar el documento en la base de datos
-    await reservedApartment.save();
+    if (isDateTaken) {
+        return res.send(`
+        <h3>❌ El apartamento ya está reservado en las fechas seleccionadas.</h3>
+        <a href="/apartment/${idApartment}">Volver al apartamento</a>
+      `);
+    }
 
-    res.send(`Tu reserva ha sido realizada con éxito. Volver a <a href="/">HOME</a>`);
-}
+    // 4. Si no hay solapamiento, guardamos la nueva reserva
+    apartment.reservations.push({
+        email,
+        startDate,
+        endDate,
+    });
+
+    await apartment.save();
+
+    // 5. Confirmación al cliente
+    res.send(`
+      <h3>✅ Tu reserva ha sido realizada con éxito</h3>
+      <a href="/">Volver al HOME</a>
+    `);
+};
 
 export const searchApartments = async (req, res) => {
     // 1. Obtener la query string del objeto request
     const { maxPrice } = req.query;
 
     // 2. Filtrar todos los apartamentos de la base de datos por TODOS los criterios de búsqueda que ha informado el usuario
-    const filteredApartments = await Apartment.find({ price: { $lte: maxPrice }});
+    const filteredApartments = await Apartment.find({ price: { $lte: maxPrice } });
 
     // 3. PAsar el resultado de la búsqueda a la vista
-    res.render('home.ejs' , {
+    res.render('home.ejs', {
         allApartments: filteredApartments,
-        filters : {
+        filters: {
             maxPrice: maxPrice
         }
     })

@@ -1,0 +1,22 @@
+<div class="navigation-menu">
+    <p>
+        <a href="/"> BravaBook 🦜</a>
+    </p>
+    <p> <a href="/admin/apartment/new">Añadir nuevo apartamento</a>
+    </p>
+    <p>
+         <% if (isAuthenticated) { %>
+        <p><a href="/logout">Logout</a></p>
+        <% } else { %>
+            <p><a href="/login">Login</a></p>
+            <% } %>
+    </p>
+</div>
+
+<% if (info) { %>
+
+<div class="container alert-info">
+    <%= info %>
+</div>
+
+<% } %>

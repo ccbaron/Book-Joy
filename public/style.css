@@ -1,0 +1,24 @@
+a {
+    text-decoration: none;
+  }
+  
+  .btn--danger {
+      color : white;
+      background-color: rgb(229, 13, 13);
+  }
+  
+  .alert-info {
+    color: #333;
+    margin-bottom: 15px;
+    padding: 8px 12px;
+    background-color: #e7f3fe;
+    border-left: 6px solid #2196F3;
+  }
+  
+  
+  
+  .navigation-menu {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }

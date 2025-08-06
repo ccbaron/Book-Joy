@@ -14,10 +14,9 @@ export const postLoginForm = (req, res) => {
         req.session.info = `${username} ha iniciado sesión correctamente.`;
         res.redirect('/');
     } else {
-        // 2b Si no es correcto, pues le enviaremos un error de autorización y le redirigimos de nuevo al formulario de login
+        // 2b. Si no es correcto, pues le enviaremos un error de autorización y le redirigimos de nuevo al formulario de login
         res.redirect('/login');
     }
-
 
 
 

@@ -2,7 +2,7 @@
 <html lang="es">
 
 <head>
-    <title>Brava Book 🦜</title>
+    <title>Book Joy</title>
     <%- include('./partials/head.ejs') %>
 
 
@@ -13,7 +13,7 @@
         <%- include('./partials/header.ejs') %>
     </header>
     <main class="container" style="width: 50%;">
-        <h1>Reserva ya tu apartamento en Brava Book</h1>
+        <h1>Reserva ya tu apartamento en Book Joy</h1>
         <form action="/search" method="get">
             <label for="maxPrice">Precio máximo por noche</label>
             <input type="number" name="maxPrice" id="maxPrice" value="<%= filters.maxPrice %>" required>
@@ -21,15 +21,19 @@
         </form>
         <section>
             <% allApartments.forEach(function(apt) { %>
-                
+
                 <a href="/apartment/<%= apt._id %>">
                     <article>
-                        <header><%= apt.title  %></header>
+                        <header>
+                            <%= apt.title %>
+                        </header>
                         <img src="<%= apt.mainPhoto %>" alt="<%= apt.title %>">
-                        <footer><%= apt.price %> €</footer>
+                        <footer>
+                            <%= apt.price %> €
+                        </footer>
                     </article>
                 </a>
-            <% }); %>
+                <% }); %>
 
         </section>
     </main>

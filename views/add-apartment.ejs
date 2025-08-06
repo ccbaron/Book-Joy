@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Añadir Nuevo Apartamento</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="/style.css">
+
+</head>
+
+<body>
+  <header class="container-fluid">
+    <%- include('./partials/header.ejs') %>
+  </header>
+  <main class="container">
+    <h1>Añadir Nuevo Apartamento</h1>
+    <form action="/admin/apartment/<%= editMode? apartment._id + " /edit" : "" %>" method="post">
+      <label for="title">Título</label>
+      <input type="text" name="title" id="title" required maxlength="40" value="<%= apartment.title  %>">
+      <label for="city">Ciudad</label>
+      <input type="text" name="city" id="city" required value="<%= apartment.city %>">
+      <label for="price">Precio por noche (€)</label>
+      <input type="number" name="price" id="price" value="<%= apartment.price %>">
+      <label for="size">Superficie m²</label>
+      <input type="number" name="size" id="size" value="<%= apartment.squareMeters %>" required>
+      
+      <!-- TODO: Valudaciones de los campos -->
+      <label for="mainPhoto">Foto principal</label>
+      <input type="url" name="mainPhoto" id="mainPhoto" value="<%= apartment.mainPhoto %>">
+      <input type="submit" value="<%= editMode? " Acutalizar": "Añadir" %>">
+    </form>
+
+    <% if (editMode) { %>
+      <section id="modal">
+        <button class="contrast btn--danger" data-target="modal-example" onclick="toggleModal(event)">
+          Eliminar Apartamento
+        </button>
+      </section>
+      <% } %>
+  </main>
+  <dialog id="modal-example">
+    <article>
+      <header>
+        <button aria-label="Close" rel="prev" data-target="modal-example" onclick="toggleModal(event)"></button>
+        <h3>¿Seguro que quieres eliminar el apartamento?</h3>
+      </header>
+      <p>
+        Los ap artamentos eliminados no se pueden recuperar.
+      </p>
+      <footer style="display: flex;justify-content: space-between;">
+        <button role="button" class="secondary" data-target="modal-example" onclick="toggleModal(event)">
+          Cancel</button>
+        <form action="/admin/apartment/<%= apartment._id %>/delete" method="post">
+          <input role="button" class="btn--danger" type="submit" value="Confirmar">
+        </form>
+      </footer>
+    </article>
+  </dialog>
+  <script src="/modal.js"></script>
+</body>
+
+</html>

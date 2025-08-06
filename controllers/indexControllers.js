@@ -1,37 +1,67 @@
-export const getLoginForm = (req, res) => {
-    res.render('login.ejs');
-}
+import { Apartment } from '../models/Apartment.model.js';
 
-export const postLoginForm = (req, res) => {
-    // 1. Comprobar si el usuario y contraseña que me han puesto está en la base de datos (spoiler: no hay de base datos, usaremos variables. Pero una autentificación real si deberías permitir que tus usuarios se registren y guardar sus credenciales en una base de datos)
-    const { username, password } = req.body;
+export const getApartments = async (req, res)=> {
+   // 1. Recuperar los datos del Modelo (Apartment)
+    const allApartments = await Apartment.find();
+    console.log("🚀 ~ app.get ~ allApartments:", allApartments)
 
-    // 2a. Si son correctos, modificaremos el objeto req.session para indicar que el usuario esta autentificado.
-    // Opción A: Redirgir a la Home page
+    // TODO: Buscar el precio máximo de todos mis apartamentos en la base de datos. Establecer ese valor en filters.maxPrice
 
-    if (username == "admin" && password == "admin") {
-        req.session.isAuthenticated = true;
-        req.session.info = `${username} ha iniciado sesión correctamente.`;
-        res.redirect('/');
-    } else {
-        // 2b Si no es correcto, pues le enviaremos un error de autorización y le redirigimos de nuevo al formulario de login
-        res.redirect('/login');
-    }
-
-
-
-
-}
-
-export const Logout = (req, res) => {
-    console.log('Logout');
-
-    // TODO: Seria interesante un mensaje típico de "Has cerrado la sesión correctamente"
-
-    req.session.destroy(err => {
-        if (err) {
-            return res.send('Error al cerrar sesión');
+   // 2. Este endpoint va a pasar los datos una vista
+    res.render('home.ejs', {
+        allApartments,
+        filters: {
+            maxPrice: ""
         }
-        res.redirect('/');
+    })
+};
+
+export const getApartmentById = async (req, res)=> {
+
+    // 1. Recuperar del modelo el documento identificado con el id :id
+    const apartment = await Apartment.findById(req.params.id);
+
+    // 2. Crear una vista de nombre apartment-detail.ejs
+
+    // 3. PAsar a esta vista el objeto apartamento
+    res.render("apartment-detail.ejs", {
+        apartment
+    })
+
+}
+
+export const postNewReservation = async (req, res) => {
+    // 1. Obtener el email, fecha de inicio de la reserva, y fecha de fin
+    const {idApartment, email, startDate, endDate} = req.body;
+    
+    // 2 Obtener el ID del apartamento a reservar
+    const reservedApartment = await Apartment.findById(idApartment);
+    
+    // 3. Añadir un nuevo objeto al campo apartment.reservations
+    reservedApartment.reservations.push({
+        email,
+        startDate,
+        endDate
     });
+
+    // 4. Salvar el documento en la base de datos
+    await reservedApartment.save();
+
+    res.send(`Tu reserva ha sido realizada con éxito. Volver a <a href="/">HOME</a>`);
+}
+
+export const searchApartments = async (req, res) => {
+    // 1. Obtener la query string del objeto request
+    const { maxPrice } = req.query;
+
+    // 2. Filtrar todos los apartamentos de la base de datos por TODOS los criterios de búsqueda que ha informado el usuario
+    const filteredApartments = await Apartment.find({ price: { $lte: maxPrice }});
+
+    // 3. PAsar el resultado de la búsqueda a la vista
+    res.render('home.ejs' , {
+        allApartments: filteredApartments,
+        filters : {
+            maxPrice: maxPrice
+        }
+    })
 }

@@ -1,42 +1,47 @@
 a {
-    text-decoration: none;
-  }
-  
-  .btn--danger {
-      color : white;
-      background-color: rgb(229, 13, 13);
-  }
-  
-  .alert-info {
-    color: #333;
-    margin-bottom: 15px;
-    padding: 8px 12px;
-    background-color: #e7f3fe;
-    border-left: 6px solid #2196F3;
-  }
-  
-  
-  
-  .navigation-menu {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-  }
+  text-decoration: none;
+}
 
-  .reservations-block {
-    margin-top: 2rem;
-    padding: 1rem;
-    background-color: #5d5252;
-    border-radius: 8px;
-  }
-  
-  .reserved-dates {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  .reserved-dates li {
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-  }
-  
+.btn--danger {
+  color: white;
+  background-color: rgb(229, 13, 13);
+}
+
+.alert-info {
+  color: #333;
+  margin-bottom: 15px;
+  padding: 8px 12px;
+  background-color: #e7f3fe;
+  border-left: 6px solid #2196F3;
+}
+
+
+
+.navigation-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reservations-block {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #5d5252;
+  border-radius: 8px;
+}
+
+.reserved-dates {
+  list-style: none;
+  padding-left: 0;
+}
+
+.reserved-dates li {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.search-form {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}

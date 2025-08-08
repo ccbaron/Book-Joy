@@ -9,19 +9,36 @@
 </head>
 
 <body>
+
     <header class="container-fluid">
         <%- include('./partials/header.ejs') %>
     </header>
+
     <main class="container" style="width: 50%;">
         <h1>Reserva ya tu apartamento en Book Joy</h1>
-        <form action="/search" method="get">
+
+        <form action="/search" method="get" class="search-form">
+            <label for="city">Ciudad</label>
+            <input type="text" name="city" id="city" placeholder="Ej: Barcelona" value="<%= filters.city || '' %>">
+
+            <label for="maxGuests">Capacidad mínima</label>
+            <input type="number" name="maxGuests" id="maxGuests" min="1" value="<%= filters.maxGuests || '' %>">
+
+            <label for="startDate">Fecha de entrada</label>
+            <input type="date" name="startDate" id="startDate" value="<%= filters.startDate || '' %>">
+
+            <label for="endDate">Fecha de salida</label>
+            <input type="date" name="endDate" id="endDate" value="<%= filters.endDate || '' %>">
+
             <label for="maxPrice">Precio máximo por noche</label>
-            <input type="number" name="maxPrice" id="maxPrice" value="<%= filters.maxPrice %>" required>
+            <input type="number" name="maxPrice" id="maxPrice" value="<%= filters.maxPrice || '' %>" required>
+
             <input type="submit" value="Buscar">
         </form>
 
         <section>
-            <% allApartments.forEach(function(apt) { const mainPhoto=apt.photos?.find(p=> p.isMain) || apt.photos?.[0] || {}; %>
+            <% allApartments.forEach(function(apt) { const mainPhoto=apt.photos?.find(p=> p.isMain) || apt.photos?.[0]
+                || {}; %>
                 <a href="/apartment/<%= apt._id %>">
                     <article>
                         <header>

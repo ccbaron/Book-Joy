@@ -44,7 +44,7 @@ export const postNewReservation = async (req, res) => {
         return res.status(404).send("Apartamento no encontrado");
     }
 
-    // 🔐 Validar que las fechas tengan lógica antes de guardar
+    // Validar que las fechas tengan lógica antes de guardar
     const newStart = new Date(startDate);
     const newEnd = new Date(endDate);
 
@@ -96,17 +96,45 @@ export const postNewReservation = async (req, res) => {
 };
 
 export const searchApartments = async (req, res) => {
-    // 1. Obtener la query string del objeto request
-    const { maxPrice } = req.query;
+    const { maxPrice, city, maxGuests, startDate, endDate } = req.query;
 
-    // 2. Filtrar todos los apartamentos de la base de datos por TODOS los criterios de búsqueda que ha informado el usuario
-    const filteredApartments = await Apartment.find({ price: { $lte: maxPrice } });
+    const filters = {
+        price: { $lte: maxPrice || 10000 }
+    };
 
-    // 3. PAsar el resultado de la búsqueda a la vista
+    if (city) {
+        filters["location.city"] = { $regex: new RegExp(city, "i") }; // búsqueda flexible
+    }
+
+    if (maxGuests) {
+        filters.maxGuests = { $gte: Number(maxGuests) };
+    }
+
+    let apartments = await Apartment.find(filters).lean();
+
+    // Filtrar por fechas libres
+    if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        apartments = apartments.filter(ap => {
+            const hasConflict = ap.reservations?.some(r => {
+                const resStart = new Date(r.startDate);
+                const resEnd = new Date(r.endDate);
+                return start <= resEnd && end >= resStart;
+            });
+            return !hasConflict;
+        });
+    }
+
     res.render('home.ejs', {
-        allApartments: filteredApartments,
+        allApartments: apartments,
         filters: {
-            maxPrice: maxPrice
+            maxPrice,
+            city,
+            maxGuests,
+            startDate,
+            endDate
         }
-    })
-}
+    });
+};

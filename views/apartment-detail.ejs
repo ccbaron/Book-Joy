@@ -24,190 +24,215 @@
         <% const mainPhoto=apartment.photos?.find(p=> p.isMain) || apartment.photos?.[0]; %>
             <% if (mainPhoto) { %>
                 <img src="<%= mainPhoto.url %>" alt="Foto principal del apartamento"
-                    class="img-fluid rounded mb-4 w-100" style="max-height: 400px; object-fit: cover;">
+                    class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;">
                 <% } %>
+                    <% if (apartment.photos?.length> 1) { %>
+                        <div class="container text-center my-5">
+                            <div class="d-flex flex-wrap justify-content-center gap-4">
+                                <% apartment.photos.forEach((photo)=> {
+                                    if (!photo.isMain) { %>
+                                    <img src="<%= photo.url %>" alt="<%= photo.description || 'Foto del apartamento' %>"
+                                        style="width: 300px; height: 200px; object-fit: cover; border-radius: 8px;">
+                                    <% } }) %>
+                            </div>
+                        </div>
+                        <% } %>
 
-                    <div class="row">
+                            <div class="row">
 
-                        <!-- Info general -->
-                        <div class="col-md-8">
+                                <%# Info general %>
+                                    <div class="col-md-8">
 
-                            <section class="mb-5">
-                                <h4>Descripción</h4>
-                                <p>
-                                    <%= apartment.description || 'No disponible' %>
-                                </p>
-                            </section>
+                                        <section class="mb-5">
+                                            <h4>Descripción</h4>
+                                            <p>
+                                                <%= apartment.description || 'No disponible' %>
+                                            </p>
+                                        </section>
 
-                            <section class="mb-5">
-                                <h4>Reglas del apartamento</h4>
-                                <p>
-                                    <%= apartment.rules || 'No especificadas' %>
-                                </p>
-                            </section>
+                                        <section class="mb-5">
+                                            <h4>Reglas del apartamento</h4>
+                                            <p>
+                                                <%= apartment.rules || 'No especificadas' %>
+                                            </p>
+                                        </section>
 
-                            <section class="mb-5">
-                                <h4>Detalles</h4>
-                                <ul class="my-4 list-group mb-3">
-                                    <li class="list-group-item"><strong>Precio:</strong> €<%= apartment.price %> / noche
-                                    </li>
-                                    <li class="list-group-item"><strong>Superficie:</strong>
-                                        <%= apartment.squareMeters %> m²
-                                    </li>
-                                    <li class="list-group-item"><strong>Capacidad máxima:</strong>
-                                        <%= apartment.maxGuests %> personas
-                                    </li>
-                                    <li class="list-group-item"><strong>Habitaciones:</strong>
-                                        <%= apartment.rooms %>
-                                    </li>
-                                    <li class="list-group-item"><strong>Camas:</strong>
-                                        <%= apartment.beds %>
-                                    </li>
-                                    <li class="list-group-item"><strong>Baños:</strong>
-                                        <%= apartment.bathrooms %>
-                                    </li>
-                                </ul>
-                            </section>
+                                        <section class="mb-5">
+                                            <h4>Detalles</h4>
+                                            <ul class="my-4 list-group mb-3">
+                                                <li class="list-group-item"><strong>Precio:</strong> €<%=
+                                                        apartment.price %>
+                                                        / noche
+                                                </li>
+                                                <li class="list-group-item"><strong>Superficie:</strong>
+                                                    <%= apartment.squareMeters %> m²
+                                                </li>
+                                                <li class="list-group-item"><strong>Capacidad máxima:</strong>
+                                                    <%= apartment.maxGuests %> personas
+                                                </li>
+                                                <li class="list-group-item"><strong>Habitaciones:</strong>
+                                                    <%= apartment.rooms %>
+                                                </li>
+                                                <li class="list-group-item"><strong>Camas:</strong>
+                                                    <%= apartment.beds %>
+                                                </li>
+                                                <li class="list-group-item"><strong>Baños:</strong>
+                                                    <%= apartment.bathrooms %>
+                                                </li>
+                                            </ul>
+                                        </section>
 
-                            <!-- Servicios -->
-                            <section class="mb-5">
-                                <h4 class="mt-5">Servicios</h4>
-                                <div class="d-flex flex-wrap gap-3 text-dark mb-4">
+                                        <%# Servicios %>
+                                            <section class="mb-5">
+                                                <h4 class="mt-5">Servicios</h4>
+                                                <div class="d-flex flex-wrap gap-3 text-dark mb-4">
 
-                                    <% if (apartment.services?.wifi) { %>
-                                        <span title="Wi-Fi"><i class="fa-solid fa-wifi"></i></span>
-                                        <% } %>
-
-                                            <% if (apartment.services?.parking) { %>
-                                                <span title="Parking"><i class="fa-solid fa-square-parking"></i></span>
-                                                <% } %>
-
-                                                    <% if (apartment.services?.disability) { %>
-                                                        <span title="Accesible"><i
-                                                                class="fa-brands fa-accessible-icon"></i></span>
+                                                    <% if (apartment.services?.wifi) { %>
+                                                        <span title="Wi-Fi"><i class="fa-solid fa-wifi"></i></span>
                                                         <% } %>
 
-                                                            <% if (apartment.services?.airConditioning) { %>
-                                                                <span title="Aire acondicionado"><i
-                                                                        class="fa-solid fa-snowflake"></i></span>
+                                                            <% if (apartment.services?.parking) { %>
+                                                                <span title="Parking"><i
+                                                                        class="fa-solid fa-square-parking"></i></span>
                                                                 <% } %>
 
-                                                                    <% if (apartment.services?.heating) { %>
-                                                                        <span title="Calefacción"><i
-                                                                                class="fa-solid fa-snowflake"></i></span>
+                                                                    <% if (apartment.services?.disability) { %>
+                                                                        <span title="Accesible"><i
+                                                                                class="fa-brands fa-accessible-icon"></i></span>
                                                                         <% } %>
 
-                                                                            <% if (apartment.services?.tv) { %>
-                                                                                <span title="Televisión"><i
-                                                                                        class="fa-solid fa-tv"></i></span>
+                                                                            <% if (apartment.services?.airConditioning)
+                                                                                { %>
+                                                                                <span title="Aire acondicionado"><i
+                                                                                        class="fa-solid fa-snowflake"></i></span>
                                                                                 <% } %>
 
-                                                                                    <% if (apartment.services?.kitchen)
+                                                                                    <% if (apartment.services?.heating)
                                                                                         { %>
-                                                                                        <span title="Cocina"><i
-                                                                                                class="fa-solid fa-kitchen-set"></i></span>
+                                                                                        <span title="Calefacción"><i
+                                                                                                class="fa-solid fa-snowflake"></i></span>
                                                                                         <% } %>
 
                                                                                             <% if
-                                                                                                (apartment.services?.internet)
+                                                                                                (apartment.services?.tv)
                                                                                                 { %>
                                                                                                 <span
-                                                                                                    title="Internet"><i
-                                                                                                        class="fa-solid fa-globe"></i></span>
+                                                                                                    title="Televisión"><i
+                                                                                                        class="fa-solid fa-tv"></i></span>
                                                                                                 <% } %>
 
-                                </div>
-                            </section>
+                                                                                                    <% if
+                                                                                                        (apartment.services?.kitchen)
+                                                                                                        { %>
+                                                                                                        <span
+                                                                                                            title="Cocina"><i
+                                                                                                                class="fa-solid fa-kitchen-set"></i></span>
+                                                                                                        <% } %>
 
-                            <section class="mb-5">
-                                <h4>Ubicación</h4>
-                                <p>
-                                    <%= apartment.location?.city %>, <%= apartment.location?.province %>
-                                </p>
-                            </section>
-                            <% if (apartment.location?.mapLink) { %>
-                                <a href="<%= apartment.location.mapLink %>" target="_blank"
-                                    class="btn btn-sm btn-outline-secondary">Ver en Google Maps</a>
-                                <% } %>
+                                                                                                            <% if
+                                                                                                                (apartment.services?.internet)
+                                                                                                                { %>
+                                                                                                                <span
+                                                                                                                    title="Internet"><i
+                                                                                                                        class="fa-solid fa-globe"></i></span>
+                                                                                                                <% } %>
 
-                                    <% if (apartment.location?.gps?.lat && apartment.location?.gps?.lng) { %>
-                                        <div class="mt-3">
-                                            <div class="mapa-ubicacion mt-3 mb-5">
-                                                <iframe
-                                                    src="https://maps.google.com/maps?q=<%= apartment.location.gps.lat %>,<%= apartment.location.gps.lng %>&z=15&output=embed"
-                                                    style="width: 100%; height: 200px; border: none; border-radius: 8px;"
-                                                    allowfullscreen loading="lazy"
-                                                    referrerpolicy="no-referrer-when-downgrade">
-                                                </iframe>
-                                            </div>
+                                                </div>
+                                            </section>
+
+                                            <section class="mb-5">
+                                                <h4>Ubicación</h4>
+                                                <p>
+                                                    <%= apartment.location?.city %>, <%= apartment.location?.province %>
+                                                </p>
+                                            </section>
+                                            <% if (apartment.location?.mapLink) { %>
+                                                <a href="<%= apartment.location.mapLink %>" target="_blank"
+                                                    class="btn btn-sm btn-outline-secondary">Ver en Google Maps</a>
+                                                <% } %>
+
+                                                    <% if (apartment.location?.gps?.lat && apartment.location?.gps?.lng)
+                                                        { %>
+                                                        <div class="mt-3">
+                                                            <div class="mapa-ubicacion mt-3 mb-5">
+                                                                <iframe
+                                                                    src="https://maps.google.com/maps?q=<%= apartment.location.gps.lat %>,<%= apartment.location.gps.lng %>&z=15&output=embed"
+                                                                    style="width: 100%; height: 200px; border: none; border-radius: 8px;"
+                                                                    allowfullscreen loading="lazy"
+                                                                    referrerpolicy="no-referrer-when-downgrade">
+                                                                </iframe>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
+                                    </div>
+
+                                    <%# Reservas y fechas %>
+                                        <div class="col-md-4">
+                                            <% if (isAuthenticated) { %>
+                                                <a href="/admin/apartment/<%= apartment._id %>/edit/"
+                                                    class="btn btn-warning w-100 mb-4">Editar apartamento</a>
+                                                <% } else { %>
+
+                                                    <section class="mb-5">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">Reservar</h5>
+                                                                <form action="/apartment/reservation/new" method="post">
+                                                                    <input type="hidden" name="idApartment"
+                                                                        value="<%= apartment._id %>">
+
+                                                                    <div class="mb-3">
+                                                                        <label for="email" class="form-label">Tu
+                                                                            email</label>
+                                                                        <input type="email" name="email" id="email"
+                                                                            class="form-control" required>
+                                                                    </div>
+
+
+                                                                    <div class="mb-3">
+                                                                        <label for="startDate" class="form-label">Fecha
+                                                                            de
+                                                                            entrada</label>
+                                                                        <input type="date" name="startDate"
+                                                                            id="startDate" class="form-control"
+                                                                            required>
+                                                                    </div>
+
+                                                                    <div class="mb-3">
+                                                                        <label for="endDate" class="form-label">Fecha de
+                                                                            salida</label>
+                                                                        <input type="date" name="endDate" id="endDate"
+                                                                            class="form-control" required>
+                                                                    </div>
+
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary w-100">Reservar</button>
+                                                                </form>
+                                                    </section>
                                         </div>
-                                        <% } %>
-                        </div>
-
-                        <%# Reservas y fechas %>
-                            <div class="col-md-4">
-                                <% if (isAuthenticated) { %>
-                                    <a href="/admin/apartment/<%= apartment._id %>/edit/"
-                                        class="btn btn-warning w-100 mb-4">Editar apartamento</a>
-                                    <% } else { %>
-
-                                        <section class="mb-5">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">Reservar</h5>
-                                                    <form action="/apartment/reservation/new" method="post">
-                                                        <input type="hidden" name="idApartment"
-                                                            value="<%= apartment._id %>">
-
-                                                        <div class="mb-3">
-                                                            <label for="email" class="form-label">Tu email</label>
-                                                            <input type="email" name="email" id="email"
-                                                                class="form-control" required>
-                                                        </div>
-
-
-                                                        <div class="mb-3">
-                                                            <label for="startDate" class="form-label">Fecha de
-                                                                entrada</label>
-                                                            <input type="date" name="startDate" id="startDate"
-                                                                class="form-control" required>
-                                                        </div>
-
-                                                        <div class="mb-3">
-                                                            <label for="endDate" class="form-label">Fecha de
-                                                                salida</label>
-                                                            <input type="date" name="endDate" id="endDate"
-                                                                class="form-control" required>
-                                                        </div>
-
-                                                        <button type="submit"
-                                                            class="btn btn-primary w-100">Reservar</button>
-                                                    </form>
-                                        </section>
                             </div>
-                    </div>
-                    <% } %>
+                            <% } %>
 
-                        <%#-- Fechas ya reservadas %>
-                            <% if (apartment.reservations && apartment.reservations.length> 0) { %>
-                                <section class="mb-5">
-                                    <div class="card mt-4">
-                                        <div class="card-body">
-                                            <h6>Fechas ya reservadas</h6>
-                                            <ul class="list-group list-group-flush">
-                                                <% apartment.reservations.forEach(r=> { %>
-                                                    <li class="list-group-item">
-                                                        <%= new Date(r.startDate).toLocaleDateString() %> →
-                                                            <%= new Date(r.endDate).toLocaleDateString() %>
-                                                    </li>
-                                                    <% }) %>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </section>
-                                <% } %>
-                                    </div>
-                                    </div>
+                                <%#-- Fechas ya reservadas %>
+                                    <% if (apartment.reservations && apartment.reservations.length> 0) { %>
+                                        <section class="mb-5">
+                                            <div class="card mt-4">
+                                                <div class="card-body">
+                                                    <h6>Fechas ya reservadas</h6>
+                                                    <ul class="list-group list-group-flush">
+                                                        <% apartment.reservations.forEach(r=> { %>
+                                                            <li class="list-group-item">
+                                                                <%= new Date(r.startDate).toLocaleDateString() %> →
+                                                                    <%= new Date(r.endDate).toLocaleDateString() %>
+                                                            </li>
+                                                            <% }) %>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <% } %>
+                                            </div>
+                                            </div>
     </main>
 </body>
 

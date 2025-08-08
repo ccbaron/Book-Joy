@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <header>
+  <header class="container-fluid py-3 bg-dark text-white">
     <%- include('./partials/header.ejs') %>
   </header>
 
@@ -18,7 +18,7 @@
     <h1 class="mb-4 text-center">
       <%= editMode ? "Editar apartamento" : "Añadir nuevo apartamento" %>
     </h1>
-    
+
     <!-- Formulario para añadir o editar un apartamento -->
     <form action="<%= editMode ? '/admin/apartment/' + apartment._id + '/edit' : '/admin/apartment' %>" method="post"
       class="row g-3">

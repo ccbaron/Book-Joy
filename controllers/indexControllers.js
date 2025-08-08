@@ -89,10 +89,8 @@ export const postNewReservation = async (req, res) => {
     await apartment.save();
 
     // 5. Confirmación al cliente
-    res.send(`
-      <h3>✅ Tu reserva ha sido realizada con éxito</h3>
-      <a href="/">Volver al HOME</a>
-    `);
+    res.render("reservation-success.ejs");
+
 };
 
 export const searchApartments = async (req, res) => {

@@ -2,6 +2,10 @@ a {
   text-decoration: none;
 }
 
+body {
+  background-color: white;
+}
+
 .btn--danger {
   color: white;
   background-color: rgb(229, 13, 13);

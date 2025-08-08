@@ -22,3 +22,21 @@ a {
       justify-content: space-between;
       align-items: center;
   }
+
+  .reservations-block {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #5d5252;
+    border-radius: 8px;
+  }
+  
+  .reserved-dates {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .reserved-dates li {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  

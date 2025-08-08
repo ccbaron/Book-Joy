@@ -44,18 +44,33 @@ export const postNewReservation = async (req, res) => {
         return res.status(404).send("Apartamento no encontrado");
     }
 
+    // 🔐 Validar que las fechas tengan lógica antes de guardar
+    const newStart = new Date(startDate);
+    const newEnd = new Date(endDate);
+
+    if (!startDate || !endDate || newStart >= newEnd) {
+        return res.send(`
+        <h3>❌ Las fechas seleccionadas no son válidas.</h3>
+        <p>Asegúrate de que la fecha de entrada sea anterior a la de salida.</p>
+        <a href="/apartment/${idApartment}">Volver al apartamento</a>
+    `);
+    }
+
     // 3. Comprobamos si ya hay alguna reserva que se solape con las fechas pedidas
     const isDateTaken = apartment.reservations.some((r) => {
-
-        // Convertimos las fechas a objetos Date
         const existingStart = new Date(r.startDate);
         const existingEnd = new Date(r.endDate);
-        const newStart = new Date(startDate);
-        const newEnd = new Date(endDate);
 
-        // Regla de solapamiento: hay cruce si:
         return newStart <= existingEnd && newEnd >= existingStart;
     });
+
+    if (isDateTaken) {
+        return res.send(`
+        <h3>❌ El apartamento ya está reservado en las fechas seleccionadas.</h3>
+        <a href="/apartment/${idApartment}">Volver al apartamento</a>
+    `);
+    }
+
 
     if (isDateTaken) {
         return res.send(`

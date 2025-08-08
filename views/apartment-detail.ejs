@@ -125,8 +125,28 @@
                                                             <input type="submit" value="Reservar">
                                                         </form>
                                                         <% } %>
+                                                            <!-- Fechas reservadas del apartamento -->
+                                                            <% if (apartment.reservations &&
+                                                                apartment.reservations.length> 0) { %>
+                                                                <section class="reservations-block">
+                                                                    <h3>Fechas ya reservadas</h3>
+                                                                    <ul class="reserved-dates">
+                                                                        <% apartment.reservations.forEach(r=> { %>
+                                                                            <li>
+                                                                                <%= new
+                                                                                    Date(r.startDate).toLocaleDateString()
+                                                                                    %> → <%= new
+                                                                                        Date(r.endDate).toLocaleDateString()
+                                                                                        %>
+                                                                            </li>
+                                                                            <% }) %>
+                                                                    </ul>
+                                                                </section>
+                                                                <% } else { %>
+                                                                    <p>No hay reservas activas para este apartamento.
+                                                                    </p>
+                                                                    <% } %>
                                             </section>
-
     </main>
 </body>
 

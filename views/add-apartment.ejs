@@ -2,134 +2,156 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Añadir Nuevo Apartamento</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-  <link rel="stylesheet" href="/style.css" />
+  <meta charset="UTF-8">
+  <title>
+    <%= editMode ? "Editar apartamento" : "Añadir apartamento" %>
+  </title>
+  <%- include('./partials/head.ejs') %>
 </head>
 
 <body>
-  <header class="container-fluid">
+  <header>
     <%- include('./partials/header.ejs') %>
   </header>
 
-  <main class="container">
-    <h1><%= editMode ? "Editar" : "Añadir" %> Apartamento</h1>
+  <main class="container my-5">
+    <h1 class="mb-4 text-center">
+      <%= editMode ? "Editar apartamento" : "Añadir nuevo apartamento" %>
+    </h1>
+<!-- Formulario para añadir o editar un apartamento -->
+    <form action="<%= editMode ? '/admin/apartment/' + apartment._id + '/edit' : '/admin/apartment' %>" method="post"
+      class="row g-3">
 
-    <form action="/admin/apartment/<%= editMode ? apartment._id + '/edit' : 'add-new' %>" method="post">
+      <div class="col-md-6">
+        <label for="title" class="form-label">Título</label>
+        <input type="text" class="form-control" name="title" id="title" required maxlength="40"
+          value="<%= apartment.title || '' %>">
+      </div>
 
-      <!-- Información general -->
-      <label for="title">Título</label>
-      <input type="text" name="title" id="title" required maxlength="40" value="<%= apartment.title || '' %>" />
+      <div class="col-md-6">
+        <label for="description" class="form-label">Descripción</label>
+        <input type="text" class="form-control" name="description" id="description"
+          value="<%= apartment.description || '' %>">
+      </div>
 
-      <label for="description">Descripción</label>
-      <textarea name="description" id="description"><%= apartment.description || '' %></textarea>
+      <div class="col-md-6">
+        <label for="rules" class="form-label">Reglas del apartamento</label>
+        <input type="text" class="form-control" name="rules" id="rules" value="<%= apartment.rules || '' %>">
+      </div>
 
-      <label for="rules">Reglas del apartamento</label>
-      <textarea name="rules" id="rules"><%= apartment.rules || '' %></textarea>
+      <div class="col-md-3">
+        <label class="form-label">Habitaciones</label>
+        <input type="number" class="form-control" name="rooms" value="<%= apartment.rooms || '' %>">
+      </div>
 
-      <!-- Distribución -->
-      <label for="rooms">Habitaciones</label>
-      <input type="number" name="rooms" id="rooms" value="<%= apartment.rooms || 0 %>" />
+      <div class="col-md-3">
+        <label class="form-label">Camas</label>
+        <input type="number" class="form-control" name="beds" value="<%= apartment.beds || '' %>">
+      </div>
 
-      <label for="beds">Camas</label>
-      <input type="number" name="beds" id="beds" value="<%= apartment.beds || 0 %>" />
+      <div class="col-md-3">
+        <label class="form-label">Baños</label>
+        <input type="number" class="form-control" name="bathrooms" value="<%= apartment.bathrooms || '' %>">
+      </div>
 
-      <label for="bathrooms">Baños</label>
-      <input type="number" name="bathrooms" id="bathrooms" value="<%= apartment.bathrooms || 0 %>" />
+      <div class="col-md-3">
+        <label class="form-label">Capacidad (personas)</label>
+        <input type="number" class="form-control" name="maxGuests" value="<%= apartment.maxGuests || '' %>">
+      </div>
 
-      <!-- Precio y dimensiones -->
-      <label for="price">Precio por noche (€)</label>
-      <input type="number" name="price" id="price" required value="<%= apartment.price || '' %>" />
+      <div class="col-md-3">
+        <label class="form-label">Superficie (m²)</label>
+        <input type="number" class="form-control" name="squareMeters" value="<%= apartment.squareMeters || '' %>">
+      </div>
 
-      <label for="squareMeters">Superficie (m²)</label>
-      <input type="number" name="squareMeters" id="squareMeters" required value="<%= apartment.squareMeters || '' %>" />
+      <div class="col-md-3">
+        <label class="form-label">Precio por noche (€)</label>
+        <input type="number" class="form-control" name="price" value="<%= apartment.price || '' %>">
+      </div>
 
-      <label for="maxGuests">Capacidad máxima de huéspedes</label>
-      <input type="number" name="maxGuests" id="maxGuests" value="<%= apartment.maxGuests || '' %>" />
+      <div class="col-md-3">
+        <label class="form-label">Provincia</label>
+        <input type="text" class="form-control" name="province" value="<%= apartment.location?.province || '' %>">
+      </div>
 
-      <!-- Ubicación -->
-      <label for="province">Provincia</label>
-      <input type="text" name="province" id="province" value="<%= apartment.location?.province || '' %>" />
+      <div class="col-md-3">
+        <label class="form-label">Ciudad</label>
+        <input type="text" class="form-control" name="city" value="<%= apartment.location?.city || '' %>">
+      </div>
 
-      <label for="city">Ciudad</label>
-      <input type="text" name="city" id="city" required value="<%= apartment.location?.city || apartment.city || '' %>" />
+      <div class="col-md-6">
+        <label class="form-label">Latitud GPS</label>
+        <input type="text" class="form-control" name="gpsLat" value="<%= apartment.location?.gps?.lat || '' %>">
+      </div>
 
-      <label for="gpsLat">Latitud (GPS)</label>
-      <input type="number" name="gpsLat" step="any" id="gpsLat" value="<%= apartment.location?.gps?.lat || '' %>" />
+      <div class="col-md-6">
+        <label class="form-label">Longitud GPS</label>
+        <input type="text" class="form-control" name="gpsLng" value="<%= apartment.location?.gps?.lng || '' %>">
+      </div>
 
-      <label for="gpsLng">Longitud (GPS)</label>
-      <input type="number" name="gpsLng" step="any" id="gpsLng" value="<%= apartment.location?.gps?.lng || '' %>" />
+      <div class="col-md-12">
+        <label class="form-label">Link de Google Maps</label>
+        <input type="url" class="form-control" name="mapLink" value="<%= apartment.location?.mapLink || '' %>">
+      </div>
 
-      <label for="mapLink">Enlace a Google Maps</label>
-      <input type="url" name="mapLink" id="mapLink" value="<%= apartment.location?.mapLink || '' %>" />
-
-      <!-- Fotos -->
-      <h3>Fotos del apartamento (máx. 4)</h3>
-      <% for (let i = 0; i < 4; i++) { %>
-        <fieldset>
-          <legend>Foto <%= i + 1 %></legend>
-
-          <label for="photos[<%= i %>][url]">URL:</label>
-          <input type="url" name="photos[<%= i %>][url]" value="<%= apartment.photos?.[i]?.url || '' %>" />
-
-          <label for="photos[<%= i %>][description]">Descripción:</label>
-          <input type="text" name="photos[<%= i %>][description]" value="<%= apartment.photos?.[i]?.description || '' %>" />
-
-          <label>
-            <input type="checkbox" name="photos[<%= i %>][isMain]" value="true"
-              <%= apartment.photos?.[i]?.isMain ? 'checked' : '' %> />
-            ¿Es la foto principal?
-          </label>
-        </fieldset>
-      <% } %>
+      <hr class="mt-4">
 
       <!-- Servicios -->
-      <h3>Servicios incluidos</h3>
-      <% const s = apartment.services || {}; %>
-      <label><input type="checkbox" name="services[wifi]" <%= s.wifi ? "checked" : "" %>> Wifi</label><br />
-      <label><input type="checkbox" name="services[parking]" <%= s.parking ? "checked" : "" %>> Parking</label><br />
-      <label><input type="checkbox" name="services[disability]" <%= s.disability ? "checked" : "" %>> Acceso movilidad reducida</label><br />
-      <label><input type="checkbox" name="services[airConditioning]" <%= s.airConditioning ? "checked" : "" %>> Aire acondicionado</label><br />
-      <label><input type="checkbox" name="services[heating]" <%= s.heating ? "checked" : "" %>> Calefacción</label><br />
-      <label><input type="checkbox" name="services[tv]" <%= s.tv ? "checked" : "" %>> Televisión</label><br />
-      <label><input type="checkbox" name="services[kitchen]" <%= s.kitchen ? "checked" : "" %>> Cocina</label><br />
-      <label><input type="checkbox" name="services[internet]" <%= s.internet ? "checked" : "" %>> Internet</label><br />
+      <div class="col-12">
+        <h5>Servicios disponibles</h5>
+      </div>
+      <% const s=apartment.services || {}; %>
+        <% const booleanServices=["wifi", "parking" , "disability" , "airConditioning" , "heating" , "tv" , "kitchen"
+          , "internet" ]; %>
 
-      <!-- Botón de envío -->
-      <input type="submit" value="<%= editMode ? 'Actualizar' : 'Añadir' %>" />
+          <% booleanServices.forEach(service=> { %>
+            <div class="form-check col-md-3">
+              <input class="form-check-input" type="checkbox" name="services[<%= service %>]" id="<%= service %>"
+                <%=s[service] ? "checked" : "" %> >
+              <label class="form-check-label text-capitalize" for="<%= service %>">
+                <%= service.replace(/([A-Z])/g, ' $1' ) %>
+              </label>
+            </div>
+            <% }) %>
+
+              <hr class="mt-4">
+
+              <!-- Fotos -->
+              <div class="col-12">
+                <h5>Fotos</h5>
+              </div>
+
+              <% if (editMode && apartment.photos?.length> 0) {
+                apartment.photos.forEach((photo, index) => { %>
+                <div class="col-md-6">
+                  <label class="form-label">URL foto <%= index + 1 %></label>
+                  <input type="text" name="photos[<%= index %>][url]" class="form-control" value="<%= photo.url %>">
+                  <label class="form-label">Descripción</label>
+                  <input type="text" name="photos[<%= index %>][description]" class="form-control"
+                    value="<%= photo.description %>">
+                  <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" name="photos[<%= index %>][isMain]" value="true"
+                      <%=photo.isMain ? 'checked' : '' %>>
+                    <label class="form-check-label">Foto principal</label>
+                  </div>
+                </div>
+                <% }) } %>
+                <%# Si no es edición, mostramos un campo vacío %>
+                  <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-success px-5">
+                      <%= editMode ? "Actualizar" : "Añadir apartamento" %>
+                    </button>
+                  </div>
     </form>
 
     <% if (editMode) { %>
-      <section id="modal">
-        <button class="contrast btn--danger" data-target="modal-example" onclick="toggleModal(event)">
-          Eliminar Apartamento
-        </button>
-      </section>
-    <% } %>
-  </main>
-
-  <!-- Modal de confirmación de borrado -->
-  <dialog id="modal-example">
-    <article>
-      <header>
-        <button aria-label="Close" rel="prev" data-target="modal-example" onclick="toggleModal(event)"></button>
-        <h3>¿Seguro que quieres eliminar el apartamento?</h3>
-      </header>
-      <p>Los apartamentos eliminados no se pueden recuperar.</p>
-      <footer style="display: flex; justify-content: space-between;">
-        <button role="button" class="secondary" data-target="modal-example" onclick="toggleModal(event)">
-          Cancelar
-        </button>
+      <div class="text-center mt-4">
         <form action="/admin/apartment/<%= apartment._id %>/delete" method="post">
-          <input role="button" class="btn--danger" type="submit" value="Confirmar" />
+          <button class="btn btn-outline-danger">Eliminar apartamento</button>
         </form>
-      </footer>
-    </article>
-  </dialog>
-
-  <script src="/modal.js"></script>
+      </div>
+      <% } %>
+  </main>
 </body>
 
 </html>

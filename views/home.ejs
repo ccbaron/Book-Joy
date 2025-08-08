@@ -4,56 +4,105 @@
 <head>
     <title>Book Joy</title>
     <%- include('./partials/head.ejs') %>
-
-
 </head>
 
 <body>
-
-    <header class="container-fluid">
+    <header class="container-fluid py-3 bg-dark text-white">
         <%- include('./partials/header.ejs') %>
     </header>
 
-    <main class="container" style="width: 50%;">
-        <h1>Reserva ya tu apartamento en Book Joy</h1>
+    <main class="container my-5">
 
-        <form action="/search" method="get" class="search-form">
-            <label for="city">Ciudad</label>
-            <input type="text" name="city" id="city" placeholder="Ej: Barcelona" value="<%= filters.city || '' %>">
+        <!-- Filtro de búsqueda -->
+        <section class="mb-5">
+            <h1 class="text-center mb-4">Reserva tu apartamento en Book Joy</h1>
 
-            <label for="maxGuests">Capacidad mínima</label>
-            <input type="number" name="maxGuests" id="maxGuests" min="1" value="<%= filters.maxGuests || '' %>">
+            <form action="/search" method="get" class="row g-3 justify-content-center">
+                <div class="col-md-3">
+                    <label class="form-label">Ciudad</label>
+                    <input type="text" class="form-control" name="city" value="<%= filters.city || '' %>">
+                </div>
 
-            <label for="startDate">Fecha de entrada</label>
-            <input type="date" name="startDate" id="startDate" value="<%= filters.startDate || '' %>">
+                <div class="col-md-2">
+                    <label class="form-label">Capacidad mínima</label>
+                    <input type="number" class="form-control" name="maxGuests" min="1"
+                        value="<%= filters.maxGuests || '' %>">
+                </div>
 
-            <label for="endDate">Fecha de salida</label>
-            <input type="date" name="endDate" id="endDate" value="<%= filters.endDate || '' %>">
+                <div class="col-md-2">
+                    <label class="form-label">Entrada</label>
+                    <input type="date" class="form-control" name="startDate" value="<%= filters.startDate || '' %>">
+                </div>
 
-            <label for="maxPrice">Precio máximo por noche</label>
-            <input type="number" name="maxPrice" id="maxPrice" value="<%= filters.maxPrice || '' %>" required>
+                <div class="col-md-2">
+                    <label class="form-label">Salida</label>
+                    <input type="date" class="form-control" name="endDate" value="<%= filters.endDate || '' %>">
+                </div>
 
-            <input type="submit" value="Buscar">
-        </form>
+                <div class="col-md-2">
+                    <label class="form-label">Precio máximo (€)</label>
+                    <input type="number" class="form-control" name="maxPrice" required
+                        value="<%= filters.maxPrice || '' %>">
+                </div>
 
-        <section>
-            <% allApartments.forEach(function(apt) { const mainPhoto=apt.photos?.find(p=> p.isMain) || apt.photos?.[0]
-                || {}; %>
-                <a href="/apartment/<%= apt._id %>">
-                    <article>
-                        <header>
-                            <%= apt.title %>
-                        </header>
-                        <img src="<%= mainPhoto.url || '/placeholder.jpg' %>" alt="<%= apt.title %>"
-                            style="width: 100%;">
-                        <footer>
-                            <%= apt.price %> €
-                        </footer>
-                    </article>
-                </a>
-                <% }); %>
+                <div class="col-12 text-center mt-3">
+                    <button type="submit" class="btn btn-primary px-4">Buscar</button>
+                </div>
+            </form>
         </section>
 
+        <!-- Grid de apartamentos -->
+        <section class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <% allApartments.forEach(function(apt) { const mainPhoto=apt.photos?.find(p=> p.isMain) || apt.photos?.[0]
+                || {};
+                %>
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <img src="<%= mainPhoto.url || '/placeholder.jpg' %>" class="card-img-top"
+                            alt="<%= apt.title %>">
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">
+                                <%= apt.title %>
+                            </h5>
+                            <p class="card-text mb-1"><strong>Precio:</strong> €<%= apt.price %> / noche</p>
+                            <p class="card-text mb-1"><strong>Superficie:</strong>
+                                <%= apt.squareMeters %> m²
+                            </p>
+                            <p class="card-text mb-2"><strong>Capacidad:</strong>
+                                <%= apt.maxGuests %> personas
+                            </p>
+
+                            <%# Íconos de los servicios %>
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <% const s=apt.services || {}; %>
+                                    <% if (s.wifi) { %><span title="Wi-Fi">📶</span>
+                                        <% } %>
+                                            <% if (s.parking) { %><span title="Parking">🅿️</span>
+                                                <% } %>
+                                                    <% if (s.disability) { %><span title="Accesible">♿</span>
+                                                        <% } %>
+                                                            <% if (s.airConditioning) { %><span title="A/C">❄️</span>
+                                                                <% } %>
+                                                                    <% if (s.heating) { %><span
+                                                                            title="Calefacción">🔥</span>
+                                                                        <% } %>
+                                                                            <% if (s.tv) { %><span title="TV">📺</span>
+                                                                                <% } %>
+                                                                                    <% if (s.kitchen) { %><span
+                                                                                            title="Cocina">🍳</span>
+                                                                                        <% } %>
+                                                                                            <% if (s.internet) { %><span
+                                                                                                    title="Internet">🌐</span>
+                                                                                                <% } %>
+                            </div>
+
+                            <a href="/apartment/<%= apt._id %>" class="btn btn-outline-primary mt-auto">Ver detalles</a>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+        </section>
 
     </main>
 </body>

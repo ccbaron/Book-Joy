@@ -32,17 +32,14 @@ export const postNewApartment = async (req, res) => {
         } = req.body;
 
         // Procesar fotos
-        const processedPhotos = Array.isArray(photos)
-            ? photos.map(photo => ({
-                url: photo.url,
-                description: photo.description,
-                isMain: photo.isMain === 'true' || photo.isMain === true
-            }))
-            : Object.values(photos || {}).map(p => ({
-                url: p.url,
-                description: p.description,
+        const processedPhotos = Object.values(photos || {})
+            .filter(p => p.url && p.url.trim() !== "")
+            .map(p => ({
+                url: p.url.trim(),
+                description: p.description?.trim(),
                 isMain: p.isMain === 'true' || p.isMain === true
             }));
+
 
         // Procesar servicios con valores booleanos
         const processedServices = {

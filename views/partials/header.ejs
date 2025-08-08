@@ -1,22 +1,31 @@
-<div class="navigation-menu">
-    <p>
-        <a href="/"> Book Joy</a>
-    </p>
-    <p> <a href="/admin/apartment/new">Añadir nuevo apartamento</a>
-    </p>
-    <p>
-         <% if (isAuthenticated) { %>
-        <p><a href="/logout">Logout</a></p>
-        <% } else { %>
-            <p><a href="/login">Login</a></p>
-            <% } %>
-    </p>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="/">Book Joy</a>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center gap-3">
+                <% if (isAuthenticated) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/apartment/new">Añadir apartamento</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Login</a>
+                        </li>
+                        <% } %>
+            </ul>
+
+        </div>
+    </div>
+</nav>
 
 <% if (info) { %>
-
-<div class="container alert-info">
-    <%= info %>
-</div>
-
-<% } %>
+    <div class="container mt-3">
+        <div class="alert alert-info">
+            <%= info %>
+        </div>
+    </div>
+    <% } %>

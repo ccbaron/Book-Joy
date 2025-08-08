@@ -74,30 +74,46 @@
                             </p>
 
                             <%# Íconos de los servicios %>
-                            <div class="d-flex flex-wrap gap-2 mb-3">
-                                <% const s=apt.services || {}; %>
-                                    <% if (s.wifi) { %><span title="Wi-Fi">📶</span>
-                                        <% } %>
-                                            <% if (s.parking) { %><span title="Parking">🅿️</span>
-                                                <% } %>
-                                                    <% if (s.disability) { %><span title="Accesible">♿</span>
-                                                        <% } %>
-                                                            <% if (s.airConditioning) { %><span title="A/C">❄️</span>
-                                                                <% } %>
-                                                                    <% if (s.heating) { %><span
-                                                                            title="Calefacción">🔥</span>
-                                                                        <% } %>
-                                                                            <% if (s.tv) { %><span title="TV">📺</span>
-                                                                                <% } %>
-                                                                                    <% if (s.kitchen) { %><span
-                                                                                            title="Cocina">🍳</span>
-                                                                                        <% } %>
-                                                                                            <% if (s.internet) { %><span
-                                                                                                    title="Internet">🌐</span>
-                                                                                                <% } %>
-                            </div>
+                            <div class="servicios d-flex flex-wrap gap-3">
 
-                            <a href="/apartment/<%= apt._id %>" class="btn btn-outline-primary mt-auto">Ver detalles</a>
+                                    <% if (apt.services?.wifi) { %>
+                                        <span title="Wi-Fi"><i class="fa-solid fa-wifi"></i></span>
+                                        <% } %>
+
+                                            <% if (apt.services?.parking) { %>
+                                                <span title="Parking"><i class="fa-solid fa-square-parking"></i></span>
+                                                <% } %>
+
+                                                    <% if (apt.services?.disability) { %>
+                                                        <span title="Accesible"><i class="fa-brands fa-accessible-icon"></i></span>
+                                                        <% } %>
+
+                                                            <% if (apt.services?.airConditioning) { %>
+                                                                <span title="Aire acondicionado"><i class="fa-solid fa-snowflake"></i></span>
+                                                                <% } %>
+
+                                                                    <% if (apt.services?.heating) { %>
+                                                                        <span title="Calefacción"><i class="fa-solid fa-snowflake"></i></span>
+                                                                        <% } %>
+
+                                                                            <% if (apt.services?.tv) { %>
+                                                                                <span title="Televisión"><i class="fa-solid fa-tv"></i></span>
+                                                                                <% } %>
+
+                                                                                    <% if (apt.services?.kitchen) { %>
+                                                                                        <span title="Cocina"><i class="fa-solid fa-kitchen-set"></i></span>
+                                                                                        <% } %>
+
+                                                                                            <% if
+                                                                                                (apt.services?.internet)
+                                                                                                { %>
+                                                                                                <span
+                                                                                                    title="Internet"><i class="fa-solid fa-globe"></i></span>
+                                                                                                <% } %>
+                                </div>
+
+                                <a href="/apartment/<%= apt._id %>" class="btn btn-outline-primary mt-auto">Ver
+                                    detalles</a>
                         </div>
                     </div>
                 </div>

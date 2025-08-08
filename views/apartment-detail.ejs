@@ -62,28 +62,46 @@
                             </ul>
 
                             <h4>Servicios</h4>
-                            <div class="d-flex flex-wrap gap-2 mb-4">
-                                <% const s=apartment.services || {}; %>
-                                    <% if (s.wifi) { %><span title="Wi-Fi">📶</span>
-                                        <% } %>
-                                            <% if (s.parking) { %><span title="Parking">🅿️</span>
-                                                <% } %>
-                                                    <% if (s.disability) { %><span title="Accesible">♿</span>
-                                                        <% } %>
-                                                            <% if (s.airConditioning) { %><span title="A/C">❄️</span>
-                                                                <% } %>
-                                                                    <% if (s.heating) { %><span
-                                                                            title="Calefacción">🔥</span>
-                                                                        <% } %>
-                                                                            <% if (s.tv) { %><span title="TV">📺</span>
-                                                                                <% } %>
-                                                                                    <% if (s.kitchen) { %><span
-                                                                                            title="Cocina">🍳</span>
-                                                                                        <% } %>
-                                                                                            <% if (s.internet) { %><span
-                                                                                                    title="Internet">🌐</span>
-                                                                                                <% } %>
+
+                            <!-- Servicios -->
+                            <div class="d-flex flex-wrap gap-3 text-dark">
+
+                                <% if (apartment.services?.wifi) { %>
+                                    <span title="Wi-Fi"><i class="fa-solid fa-wifi"></i></span>
+                                    <% } %>
+
+                                        <% if (apartment.services?.parking) { %>
+                                            <span title="Parking"><i class="fa-solid fa-square-parking"></i></span>
+                                            <% } %>
+
+                                                <% if (apartment.services?.disability) { %>
+                                                    <span title="Accesible"><i class="fa-brands fa-accessible-icon"></i></span>
+                                                    <% } %>
+
+                                                        <% if (apartment.services?.airConditioning) { %>
+                                                            <span title="Aire acondicionado"><i class="fa-solid fa-snowflake"></i></span>
+                                                            <% } %>
+
+                                                                <% if (apartment.services?.heating) { %>
+                                                                    <span title="Calefacción"><i class="fa-solid fa-snowflake"></i></span>
+                                                                    <% } %>
+
+                                                                        <% if (apartment.services?.tv) { %>
+                                                                            <span title="Televisión"><i class="fa-solid fa-tv"></i></span>
+                                                                            <% } %>
+
+                                                                                <% if (apartment.services?.kitchen) { %>
+                                                                                    <span title="Cocina"><i class="fa-solid fa-kitchen-set"></i></span>
+                                                                                    <% } %>
+
+                                                                                        <% if
+                                                                                            (apartment.services?.internet)
+                                                                                            { %>
+                                                                                            <span title="Internet"><i class="fa-solid fa-globe"></i></span>
+                                                                                            <% } %>
+
                             </div>
+
 
                             <h4>Ubicación</h4>
                             <p>
@@ -105,59 +123,64 @@
                                         <% } %>
                         </div>
 
-                        <!-- Reservas -->
-                        <div class="col-md-4">
-                            <% if (isAuthenticated) { %>
-                                <a href="/admin/apartment/<%= apartment._id %>/edit/"
-                                    class="btn btn-warning w-100 mb-4">Editar apartamento</a>
-                                <% } else { %>
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Reservar</h5>
-                                            <form action="/apartment/reservation/new" method="post">
-                                                <input type="hidden" name="idApartment" value="<%= apartment._id %>">
+                        <%# Reservas %>
+                            <div class="col-md-4">
+                                <% if (isAuthenticated) { %>
+                                    <a href="/admin/apartment/<%= apartment._id %>/edit/"
+                                        class="btn btn-warning w-100 mb-4">Editar apartamento</a>
+                                    <% } else { %>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Reservar</h5>
+                                                <form action="/apartment/reservation/new" method="post">
+                                                    <input type="hidden" name="idApartment"
+                                                        value="<%= apartment._id %>">
 
-                                                <div class="mb-3">
-                                                    <label for="email" class="form-label">Tu email</label>
-                                                    <input type="email" name="email" id="email" class="form-control"
-                                                        required>
-                                                </div>
+                                                    <div class="mb-3">
+                                                        <label for="email" class="form-label">Tu email</label>
+                                                        <input type="email" name="email" id="email" class="form-control"
+                                                            required>
+                                                    </div>
 
-                                                <div class="mb-3">
-                                                    <label for="startDate" class="form-label">Fecha de entrada</label>
-                                                    <input type="date" name="startDate" id="startDate"
-                                                        class="form-control" required>
-                                                </div>
+                                                    <div class="mb-3">
+                                                        <label for="startDate" class="form-label">Fecha de
+                                                            entrada</label>
+                                                        <input type="date" name="startDate" id="startDate"
+                                                            class="form-control" required>
+                                                    </div>
 
-                                                <div class="mb-3">
-                                                    <label for="endDate" class="form-label">Fecha de salida</label>
-                                                    <input type="date" name="endDate" id="endDate" class="form-control"
-                                                        required>
-                                                </div>
+                                                    <div class="mb-3">
+                                                        <label for="endDate" class="form-label">Fecha de salida</label>
+                                                        <input type="date" name="endDate" id="endDate"
+                                                            class="form-control" required>
+                                                    </div>
 
-                                                <button type="submit" class="btn btn-primary w-100">Reservar</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <% } %>
-
-                                        <!-- Fechas ya reservadas -->
-                                        <% if (apartment.reservations && apartment.reservations.length> 0) { %>
-                                            <div class="card mt-4">
-                                                <div class="card-body">
-                                                    <h6>Fechas ya reservadas</h6>
-                                                    <ul class="list-group list-group-flush">
-                                                        <% apartment.reservations.forEach(r=> { %>
-                                                            <li class="list-group-item">
-                                                                <%= new Date(r.startDate).toLocaleDateString() %> → <%=
-                                                                        new Date(r.endDate).toLocaleDateString() %>
-                                                            </li>
-                                                            <% }) %>
-                                                    </ul>
-                                                </div>
+                                                    <button type="submit"
+                                                        class="btn btn-primary w-100">Reservar</button>
+                                                </form>
                                             </div>
-                                            <% } %>
-                        </div>
+                                        </div>
+                                        <% } %>
+
+                                            <%#-- Fechas ya reservadas %>
+                                                <% if (apartment.reservations && apartment.reservations.length> 0) { %>
+                                                    <div class="card mt-4">
+                                                        <div class="card-body">
+                                                            <h6>Fechas ya reservadas</h6>
+                                                            <ul class="list-group list-group-flush">
+                                                                <% apartment.reservations.forEach(r=> { %>
+                                                                    <li class="list-group-item">
+                                                                        <%= new Date(r.startDate).toLocaleDateString()
+                                                                            %> →
+                                                                            <%= new Date(r.endDate).toLocaleDateString()
+                                                                                %>
+                                                                    </li>
+                                                                    <% }) %>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <% } %>
+                            </div>
                     </div>
     </main>
 </body>

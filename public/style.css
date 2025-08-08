@@ -15,8 +15,6 @@ a {
   border-left: 6px solid #2196F3;
 }
 
-
-
 .navigation-menu {
   display: flex;
   justify-content: space-between;
@@ -44,4 +42,10 @@ a {
   display: grid;
   gap: 1rem;
   margin-bottom: 2rem;
+}
+
+/* Estilo para todos los íconos de servicios */
+.servicios i {
+  color: #333;
+  font-size: 1.1rem;
 }

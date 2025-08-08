@@ -49,3 +49,9 @@ a {
   color: #333;
   font-size: 1.1rem;
 }
+
+.mapa-ubicacion iframe {
+  height: 200px;
+  border-radius: 8px;
+  border: none;
+}

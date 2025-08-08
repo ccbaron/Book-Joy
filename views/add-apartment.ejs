@@ -18,7 +18,8 @@
     <h1 class="mb-4 text-center">
       <%= editMode ? "Editar apartamento" : "Añadir nuevo apartamento" %>
     </h1>
-<!-- Formulario para añadir o editar un apartamento -->
+    
+    <!-- Formulario para añadir o editar un apartamento -->
     <form action="<%= editMode ? '/admin/apartment/' + apartment._id + '/edit' : '/admin/apartment' %>" method="post"
       class="row g-3">
 
@@ -79,14 +80,20 @@
         <input type="text" class="form-control" name="city" value="<%= apartment.location?.city || '' %>">
       </div>
 
-      <div class="col-md-6">
-        <label class="form-label">Latitud GPS</label>
-        <input type="text" class="form-control" name="gpsLat" value="<%= apartment.location?.gps?.lat || '' %>">
-      </div>
+      <div class="col-12">
+        <div class="row">
+          <div class="col-md-6">
+            <label for="gpsLat" class="form-label">Latitud GPS</label>
+            <input type="number" step="any" class="form-control" name="gpsLat" id="gpsLat"
+              value="<%= apartment.location?.gps?.lat || '' %>">
+          </div>
 
-      <div class="col-md-6">
-        <label class="form-label">Longitud GPS</label>
-        <input type="text" class="form-control" name="gpsLng" value="<%= apartment.location?.gps?.lng || '' %>">
+          <div class="col-md-6">
+            <label for="gpsLng" class="form-label">Longitud GPS</label>
+            <input type="number" step="any" class="form-control" name="gpsLng" id="gpsLng"
+              value="<%= apartment.location?.gps?.lng || '' %>">
+          </div>
+        </div>
       </div>
 
       <div class="col-md-12">
@@ -121,27 +128,48 @@
                 <h5>Fotos</h5>
               </div>
 
-              <% if (editMode && apartment.photos?.length> 0) {
-                apartment.photos.forEach((photo, index) => { %>
-                <div class="col-md-6">
-                  <label class="form-label">URL foto <%= index + 1 %></label>
-                  <input type="text" name="photos[<%= index %>][url]" class="form-control" value="<%= photo.url %>">
-                  <label class="form-label">Descripción</label>
-                  <input type="text" name="photos[<%= index %>][description]" class="form-control"
-                    value="<%= photo.description %>">
-                  <div class="form-check mt-2">
-                    <input class="form-check-input" type="checkbox" name="photos[<%= index %>][isMain]" value="true"
-                      <%=photo.isMain ? 'checked' : '' %>>
-                    <label class="form-check-label">Foto principal</label>
+              <% if (editMode && apartment.photos?.length> 0) { %>
+                <% apartment.photos.forEach((photo, index)=> { %>
+                  <div class="col-md-6">
+                    <label class="form-label">URL foto <%= index + 1 %></label>
+                    <input type="text" name="photos[<%= index %>][url]" class="form-control" value="<%= photo.url %>">
+
+                    <label class="form-label">Descripción</label>
+                    <input type="text" name="photos[<%= index %>][description]" class="form-control"
+                      value="<%= photo.description %>">
+
+                    <div class="form-check mt-2">
+                      <input class="form-check-input" type="checkbox" name="photos[<%= index %>][isMain]" value="true"
+                        <%=photo.isMain ? 'checked' : '' %>>
+                      <label class="form-check-label">Foto principal</label>
+                    </div>
                   </div>
-                </div>
-                <% }) } %>
-                <%# Si no es edición, mostramos un campo vacío %>
-                  <div class="col-12 text-center mt-4">
-                    <button type="submit" class="btn btn-success px-5">
-                      <%= editMode ? "Actualizar" : "Añadir apartamento" %>
-                    </button>
-                  </div>
+                  <% }) %>
+                    <% } else { %>
+                      <% for (let i=0; i < 4; i++) { %>
+                        <div class="col-md-6">
+                          <label class="form-label">URL foto <%= i + 1 %></label>
+                          <input type="text" name="photos[<%= i %>][url]" class="form-control" value="">
+
+                          <label class="form-label">Descripción</label>
+                          <input type="text" name="photos[<%= i %>][description]" class="form-control" value="">
+
+                          <div class="form-check mt-2">
+                            <input class="form-check-input" type="radio" name="mainPhoto" id="mainPhoto<%= i %>"
+                              value="<%= i %>">
+                            <label class="form-check-label" for="mainPhoto<%= i %>">Foto principal</label>
+                          </div>
+                        </div>
+                        <% } %>
+                          <% } %>
+
+
+                            <%# Si no es edición, mostramos un campo vacío %>
+                              <div class="col-12 text-center mt-4">
+                                <button type="submit" class="btn btn-success px-5">
+                                  <%= editMode ? "Actualizar" : "Añadir apartamento" %>
+                                </button>
+                              </div>
     </form>
 
     <% if (editMode) { %>

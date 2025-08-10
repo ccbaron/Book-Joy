@@ -2,7 +2,7 @@ import { Apartment } from '../models/Apartment.model.js';
 
 export const getApartments = async (req, res) => {
     // 1. Recuperar los datos del Modelo (Apartment)
-    const allApartments = await Apartment.find();
+    const allApartments = await Apartment.find({ isActive: true });
     console.log("🚀 ~ app.get ~ allApartments:", allApartments)
 
     // TODO: Buscar el precio máximo de todos mis apartamentos en la base de datos. Establecer ese valor en filters.maxPrice
@@ -17,7 +17,10 @@ export const getApartments = async (req, res) => {
 };
 
 export const getApartmentById = async (req, res) => {
-    const apartment = await Apartment.findById(req.params.id);
+    const apartment = await Apartment.findOne({
+        _id: req.params.id,
+        isActive: true
+    });
 
     if (!apartment) {
         return res.status(404).send('Apartamento no encontrado');
@@ -93,6 +96,7 @@ export const postNewReservation = async (req, res) => {
 
 };
 
+// Función para buscar apartamentos según filtros
 export const searchApartments = async (req, res) => {
     const { maxPrice, city, maxGuests, startDate, endDate } = req.query;
 

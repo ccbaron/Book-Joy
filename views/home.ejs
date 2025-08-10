@@ -74,7 +74,7 @@
                             </p>
 
                             <%# Íconos de los servicios %>
-                            <div class="d-flex flex-wrap gap-3 text-dark mt-3 mb-3">
+                                <div class="d-flex flex-wrap gap-3 text-dark mt-3 mb-3">
 
                                     <% if (apt.services?.wifi) { %>
                                         <span title="Wi-Fi"><i class="fa-solid fa-wifi"></i></span>
@@ -85,30 +85,36 @@
                                                 <% } %>
 
                                                     <% if (apt.services?.disability) { %>
-                                                        <span title="Accesible"><i class="fa-brands fa-accessible-icon"></i></span>
+                                                        <span title="Accesible"><i
+                                                                class="fa-brands fa-accessible-icon"></i></span>
                                                         <% } %>
 
                                                             <% if (apt.services?.airConditioning) { %>
-                                                                <span title="Aire acondicionado"><i class="fa-solid fa-snowflake"></i></span>
+                                                                <span title="Aire acondicionado"><i
+                                                                        class="fa-solid fa-snowflake"></i></span>
                                                                 <% } %>
 
                                                                     <% if (apt.services?.heating) { %>
-                                                                        <span title="Calefacción"><i class="fa-solid fa-snowflake"></i></span>
+                                                                        <span title="Calefacción"><i
+                                                                                class="fa-solid fa-fire-flame-curved"></i></span>
                                                                         <% } %>
 
                                                                             <% if (apt.services?.tv) { %>
-                                                                                <span title="Televisión"><i class="fa-solid fa-tv"></i></span>
+                                                                                <span title="Televisión"><i
+                                                                                        class="fa-solid fa-tv"></i></span>
                                                                                 <% } %>
 
                                                                                     <% if (apt.services?.kitchen) { %>
-                                                                                        <span title="Cocina"><i class="fa-solid fa-kitchen-set"></i></span>
+                                                                                        <span title="Cocina"><i
+                                                                                                class="fa-solid fa-kitchen-set"></i></span>
                                                                                         <% } %>
 
                                                                                             <% if
                                                                                                 (apt.services?.internet)
                                                                                                 { %>
                                                                                                 <span
-                                                                                                    title="Internet"><i class="fa-solid fa-globe"></i></span>
+                                                                                                    title="Internet"><i
+                                                                                                        class="fa-solid fa-globe"></i></span>
                                                                                                 <% } %>
                                 </div>
 

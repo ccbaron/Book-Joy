@@ -187,14 +187,23 @@ export const postEditApartment = async (req, res) => {
     }
 };
 
+// Función para cancelar un apartamento (soft delete)
 export const deleteApartment = async (req, res) => {
-    // 1. Obtener el id del apartmento
-    const { id } = req.params;
-    console.log("🚀 ~ deleteApartment ~ id:", id)
+    try {
+        // 1. Obtenemos el ID del apartamento desde los parámetros de la URL
+        const { id } = req.params;
+        console.log("🗑 Cancelando apartamento (soft delete), ID:", id);
 
-    // 2. Usar el metodo Apart.findByIdAndDelete para eliminar el documento
-    await Apartment.findByIdAndDelete(id);
+        // 2. Usamos findByIdAndUpdate para cambiar "isActive" a false en lugar de borrarlo
+        await Apartment.findByIdAndUpdate(id, { isActive: false });
 
-    // 3. Redirigit al usuario a la vista principal
-    res.redirect('/');
-}
+        // 3. Mensaje opcional en la sesión para mostrar en la vista
+        req.session.info = 'Apartamento cancelado (no se mostrará más en la lista)';
+
+        // 4. Redirigimos al home
+        res.redirect('/');
+    } catch (error) {
+        console.error("❌ Error al cancelar apartamento:", error);
+        res.status(500).send("Error al cancelar apartamento. <a href='/'>Volver</a>");
+    }
+};

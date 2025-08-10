@@ -54,6 +54,7 @@ export const postNewApartment = async (req, res) => {
         };
 
         // Crear nuevo apartamento
+        // Crear nuevo apartamento
         const newApartment = new Apartment({
             title,
             description,
@@ -74,7 +75,10 @@ export const postNewApartment = async (req, res) => {
                 mapLink
             },
             services: processedServices,
-            photos: processedPhotos
+            photos: processedPhotos,
+
+            // Nuevo campo para indicar si el apartamento está activo
+            isActive: req.body.isActive === 'on' // true si el checkbox está marcado
         });
 
         await newApartment.save();
@@ -175,8 +179,13 @@ export const postEditApartment = async (req, res) => {
                 mapLink
             },
             services: processedServices,
-            photos: processedPhotos
+            photos: processedPhotos,
+
+            // Nuevo campo para indicar si el apartamento está activo
+            // Si el checkbox está marcado, isActive será true, sino será false
+            isActive: req.body.isActive === 'on'
         };
+
 
         // Usamos findByIdAndUpdate para aplicar los cambios en MongoDB
         await Apartment.findByIdAndUpdate(id, updatedData);

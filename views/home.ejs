@@ -18,7 +18,7 @@
             <h1 class="text-center mb-4">Reserva tu apartamento en Book Joy</h1>
 
             <form action="/search" method="get" class="row g-3 mb-4">
-                
+
                 <!-- Huéspedes (capacidad mínima) -->
                 <div class="col-12 col-sm-6 col-md-3">
                     <label for="guests" class="form-label">Huéspedes</label>
@@ -33,15 +33,17 @@
                 </div>
 
                 <!-- Fechas -->
-                <div class="col-12 col-sm-6 col-md-3">
-                    <label for="startDate" class="form-label">Entrada</label>
-                    <input type="date" name="startDate" id="startDate" class="form-control"
-                        value="<%= filters?.startDate || '' %>">
+
+                <!-- Fecha de entrada -->
+                <div class="col-md-3">
+                    <label for="startDate" class="form-label">Fecha de entrada</label>
+                    <input type="date" class="form-control" name="startDate" id="startDate">
                 </div>
-                <div class="col-12 col-sm-6 col-md-3">
-                    <label for="endDate" class="form-label">Salida</label>
-                    <input type="date" name="endDate" id="endDate" class="form-control"
-                        value="<%= filters?.endDate || '' %>">
+
+                <!-- Fecha de salida -->
+                <div class="col-md-3">
+                    <label for="endDate" class="form-label">Fecha de salida</label>
+                    <input type="date" class="form-control" name="endDate" id="endDate">
                 </div>
 
                 <!-- Precio -->

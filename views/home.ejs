@@ -17,38 +17,63 @@
         <section class="mb-5">
             <h1 class="text-center mb-4">Reserva tu apartamento en Book Joy</h1>
 
-            <form action="/search" method="get" class="row g-3 justify-content-center">
-                <div class="col-md-3">
-                    <label class="form-label">Ciudad</label>
-                    <input type="text" class="form-control" name="city" value="<%= filters.city || '' %>">
+            <form action="/search" method="get" class="row g-3 mb-4">
+                
+                <!-- Huéspedes (capacidad mínima) -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <label for="guests" class="form-label">Huéspedes</label>
+                    <input type="number" min="1" name="guests" id="guests" class="form-control"
+                        value="<%= filters?.guests || '' %>">
                 </div>
 
-                <div class="col-md-2">
-                    <label class="form-label">Capacidad mínima</label>
-                    <input type="number" class="form-control" name="maxGuests" min="1"
-                        value="<%= filters.maxGuests || '' %>">
+                <!-- Ciudad -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <label for="city" class="form-label">Ciudad</label>
+                    <input type="text" name="city" id="city" class="form-control" value="<%= filters?.city || '' %>">
                 </div>
 
-                <div class="col-md-2">
-                    <label class="form-label">Entrada</label>
-                    <input type="date" class="form-control" name="startDate" value="<%= filters.startDate || '' %>">
+                <!-- Fechas -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <label for="startDate" class="form-label">Entrada</label>
+                    <input type="date" name="startDate" id="startDate" class="form-control"
+                        value="<%= filters?.startDate || '' %>">
+                </div>
+                <div class="col-12 col-sm-6 col-md-3">
+                    <label for="endDate" class="form-label">Salida</label>
+                    <input type="date" name="endDate" id="endDate" class="form-control"
+                        value="<%= filters?.endDate || '' %>">
                 </div>
 
-                <div class="col-md-2">
-                    <label class="form-label">Salida</label>
-                    <input type="date" class="form-control" name="endDate" value="<%= filters.endDate || '' %>">
+                <!-- Precio -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <label for="minPrice" class="form-label">Precio mínimo</label>
+                    <input type="number" min="0" name="minPrice" id="minPrice" class="form-control"
+                        value="<%= filters?.minPrice || '' %>">
+                </div>
+                <div class="col-12 col-sm-6 col-md-3">
+                    <label for="maxPrice" class="form-label">Precio máximo</label>
+                    <input type="number" min="0" name="maxPrice" id="maxPrice" class="form-control"
+                        value="<%= filters?.maxPrice || '' %>">
                 </div>
 
-                <div class="col-md-2">
-                    <label class="form-label">Precio máximo (€)</label>
-                    <input type="number" class="form-control" name="maxPrice" required
-                        value="<%= filters.maxPrice || '' %>">
+                <!-- Ordenar -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <label for="sort" class="form-label">Ordenar por</label>
+                    <select name="sort" id="sort" class="form-select">
+                        <option value="">-- Sin orden --</option>
+                        <option value="price_asc" <%=filters?.sort==='price_asc' ? 'selected' : '' %>>Precio ↑</option>
+                        <option value="price_desc" <%=filters?.sort==='price_desc' ? 'selected' : '' %>>Precio ↓
+                        </option>
+                        <option value="m2_asc" <%=filters?.sort==='m2_asc' ? 'selected' : '' %>>m² ↑</option>
+                        <option value="m2_desc" <%=filters?.sort==='m2_desc' ? 'selected' : '' %>>m² ↓</option>
+                    </select>
                 </div>
 
-                <div class="col-12 text-center mt-3">
-                    <button type="submit" class="btn btn-primary px-4">Buscar</button>
+                <div class="col-12 col-sm-6 col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Buscar</button>
                 </div>
             </form>
+
         </section>
 
         <!-- Grid de apartamentos -->

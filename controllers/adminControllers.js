@@ -91,7 +91,8 @@ export const getEditApartment = async (req, res) => {
     // 1. Recuperar el documento identificado por su id
     const { id } = req.params;
 
-    const apartment = await Apartment.findById(id);
+    // Enviamos un objeto simple (lean) para que EJS no vea $__ u otros metadatos
+    const apartment = await Apartment.findById(id).lean();
 
     // 2. Renderizar la vista add-apartment.ejs y pasar a la misma todos los datos apartamento
     res.render('add-apartment.ejs', {
@@ -140,16 +141,18 @@ export const postEditApartment = async (req, res) => {
             }));
 
         // Procesamos los servicios para asegurarnos que estén en formato booleano
+        // Procesar servicios para que siempre tenga todas las claves
         const processedServices = {
-            wifi: !!services?.wifi,
-            parking: !!services?.parking,
-            disability: !!services?.disability,
-            airConditioning: !!services?.airConditioning,
-            heating: !!services?.heating,
-            tv: !!services?.tv,
-            kitchen: !!services?.kitchen,
-            internet: !!services?.internet
+            wifi: !!req.body.services?.wifi,
+            parking: !!req.body.services?.parking,
+            disability: !!req.body.services?.disability,
+            airConditioning: !!req.body.services?.airConditioning,
+            heating: !!req.body.services?.heating,
+            tv: !!req.body.services?.tv,
+            kitchen: !!req.body.services?.kitchen,
+            internet: !!req.body.services?.internet
         };
+
 
         // Creamos el objeto que contiene todos los cambios a guardar
         const updatedData = {

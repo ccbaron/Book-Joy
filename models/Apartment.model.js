@@ -1,17 +1,17 @@
 import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
 
-// Schema para los servicios que ofrece el apartamento
+// Schema para todos los servicios que se ofrecen el apartamento
 const servicesSchema = new Schema({
-    wifi: { type: Boolean, default: false },
-    parking: { type: Boolean, default: false },
-    disability: { type: Boolean, default: false },
-    airConditioning: { type: Boolean, default: false },
-    heating: { type: Boolean, default: false },
-    tv: { type: Boolean, default: false },
-    kitchen: { type: Boolean, default: false },
-    internet: { type: Boolean, default: false }
-}, { _id: false }); // Para evitar crear un _id adicional por servicio
+    wifi:           { type: Boolean, default: false },
+    parking:        { type: Boolean, default: false },
+    disability:     { type: Boolean, default: false },
+    airConditioning:{ type: Boolean, default: false },
+    heating:        { type: Boolean, default: false },
+    tv:             { type: Boolean, default: false },
+    kitchen:        { type: Boolean, default: false },
+    internet:       { type: Boolean, default: false },
+  }, { _id: false }); // Para evitar crear un _id adicional por servicio
 
 // Schema para fotos adicionales del apartamento
 const photoSchema = new Schema({
@@ -94,7 +94,8 @@ const apartmentSchema = new Schema({
 
     services: {
         type: servicesSchema,
-        required: true
+        required: true,
+        default: {}, // si no llegan, quedan en false
     },
 
     // Ubicación detallada del apartamento

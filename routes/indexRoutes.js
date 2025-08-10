@@ -2,7 +2,7 @@
 
 import express from 'express';
 
-import { getApartments,getApartmentById,postNewReservation, searchApartments } from '../controllers/indexControllers.js';
+import { getApartments, getApartmentById, postNewReservation, searchApartments } from '../controllers/indexControllers.js';
 
 const router = express.Router(); // 'router' es un objeto en el cuál vamos a poder definir diferentes  endpoints (para entendernos una especia de app.get, app.post, etc);
 

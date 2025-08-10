@@ -98,45 +98,63 @@ export const postNewReservation = async (req, res) => {
 
 // Función para buscar apartamentos según filtros
 export const searchApartments = async (req, res) => {
-    const { maxPrice, city, maxGuests, startDate, endDate } = req.query;
+    // 1) Leemos los filtros desde la query string
+    const {
+        guests,         // cantidad de personas (capacidad mínima)
+        city,           // ciudad
+        startDate,      // fecha de entrada deseada
+        endDate,        // fecha de salida deseada
+        minPrice,       // precio mínimo
+        maxPrice,       // precio máximo
+        sort            // orden (price_asc, price_desc, m2_asc, m2_desc)
+    } = req.query;
 
-    const filters = {
-        price: { $lte: maxPrice || 10000 }
-    };
+    // 2) Construimos la query base para MongoDB
+    const q = { isActive: true };
 
-    if (city) {
-        filters["location.city"] = { $regex: new RegExp(city, "i") }; // búsqueda flexible
+    // 3) Filtros directos que Mongo puede aplicar directamente:
+
+    if (city) q['location.city'] = new RegExp(`^${city}$`, 'i'); // Ciudad (case-insensitive)
+    if (guests) q.maxGuests = { $gte: Number(guests) }; // Capacidad mínima (maxGuests >= guests)
+
+    if (minPrice && maxPrice) { // Rango de precio (min/max)
+        q.price = { $gte: Number(minPrice), $lte: Number(maxPrice) };
+    } else if (minPrice) {
+        q.price = { $gte: Number(minPrice) };
+    } else if (maxPrice) {
+        q.price = { $lte: Number(maxPrice) };
     }
 
-    if (maxGuests) {
-        filters.maxGuests = { $gte: Number(maxGuests) };
-    }
+    // 4) Traemos candidatos desde Mongo
+    let results = await Apartment.find(q);
 
-    let apartments = await Apartment.find(filters).lean();
-
-    // Filtrar por fechas libres
+    // 5) Filtro por disponibilidad en fechas (si el usuario las indicó)
+    //    Regla: un apartamento está disponible si NO tiene reservas que se SOLAPEN con [startDate, endDate]
     if (startDate && endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
+        const s = new Date(startDate);
+        const e = new Date(endDate);
 
-        apartments = apartments.filter(ap => {
-            const hasConflict = ap.reservations?.some(r => {
-                const resStart = new Date(r.startDate);
-                const resEnd = new Date(r.endDate);
-                return start <= resEnd && end >= resStart;
+        results = results.filter(ap => {
+            const hasOverlap = ap.reservations?.some(r => {
+                const rs = new Date(r.startDate);
+                const re = new Date(r.endDate);
+                // Solape si: s <= re && e >= rs
+                return s <= re && e >= rs;
             });
-            return !hasConflict;
+            return !hasOverlap; // solo dejamos los que NO se solapan
         });
     }
 
+    // 6) Ordenación simple en memoria (por claridad):
+    if (sort === 'price_asc') results.sort((a, b) => a.price - b.price);
+    if (sort === 'price_desc') results.sort((a, b) => b.price - a.price);
+    if (sort === 'm2_asc') results.sort((a, b) => a.squareMeters - b.squareMeters);
+    if (sort === 'm2_desc') results.sort((a, b) => b.squareMeters - a.squareMeters);
+
+    // 7) Renderizamos la misma home con los resultados + filtros para mantener el estado en el formulario
     res.render('home.ejs', {
-        allApartments: apartments,
-        filters: {
-            maxPrice,
-            city,
-            maxGuests,
-            startDate,
-            endDate
-        }
+        allApartments: results,
+        filters: { guests, city, startDate, endDate, minPrice, maxPrice, sort }
     });
 };
+

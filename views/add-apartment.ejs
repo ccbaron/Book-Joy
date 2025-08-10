@@ -107,69 +107,76 @@
       <div class="col-12">
         <h5>Servicios disponibles</h5>
       </div>
+
       <% const s=apartment.services || {}; %>
-        <% const booleanServices=["wifi", "parking" , "disability" , "airConditioning" , "heating" , "tv" , "kitchen"
+
+        <% const booleanServices=[ "wifi" , "parking" , "disability" , "airConditioning" , "heating" , "tv" , "kitchen"
           , "internet" ]; %>
 
-          <% booleanServices.forEach(service=> { %>
-            <div class="form-check col-md-3">
-              <input class="form-check-input" type="checkbox" name="services[<%= service %>]" id="<%= service %>"
-                <%=s[service] ? "checked" : "" %> >
-              <label class="form-check-label text-capitalize" for="<%= service %>">
-                <%= service.replace(/([A-Z])/g, ' $1' ) %>
-              </label>
-            </div>
-            <% }) %>
+          <!-- Mostramos las etiquetas en español, sin romper las claves del modelo -->
+          <% const serviceLabels={ wifi: "Wi-Fi" , parking: "Parking" , disability: "Accesible" ,
+            airConditioning: "Aire Acondicionado" , heating: "Calefacción" , tv: "TV" , kitchen: "Cocina" ,
+            internet: "Internet" }; %>
 
-              <hr class="mt-4">
-
-              <!-- Fotos -->
-              <div class="col-12">
-                <h5>Fotos</h5>
+            <% Object.keys(serviceLabels).forEach(service=> { %>
+              <div class="form-check col-md-3">
+                <input class="form-check-input" type="checkbox" name="services[<%= service %>]" id="<%= service %>"
+                  <%=s[service] ? "checked" : "" %>>
+                <label class="form-check-label" for="<%= service %>">
+                  <%= serviceLabels[service] %>
+                </label>
               </div>
+              <% }) %>
 
-              <% if (editMode && apartment.photos?.length> 0) { %>
-                <% apartment.photos.forEach((photo, index)=> { %>
-                  <div class="col-md-6">
-                    <label class="form-label">URL foto <%= index + 1 %></label>
-                    <input type="text" name="photos[<%= index %>][url]" class="form-control" value="<%= photo.url %>">
+                <hr class="mt-4">
 
-                    <label class="form-label">Descripción</label>
-                    <input type="text" name="photos[<%= index %>][description]" class="form-control"
-                      value="<%= photo.description %>">
+                <!-- Fotos -->
+                <div class="col-12">
+                  <h5>Fotos</h5>
+                </div>
 
-                    <div class="form-check mt-2">
-                      <input class="form-check-input" type="checkbox" name="photos[<%= index %>][isMain]" value="true"
-                        <%=photo.isMain ? 'checked' : '' %>>
-                      <label class="form-check-label">Foto principal</label>
+                <% if (editMode && apartment.photos?.length> 0) { %>
+                  <% apartment.photos.forEach((photo, index)=> { %>
+                    <div class="col-md-6">
+                      <label class="form-label">URL foto <%= index + 1 %></label>
+                      <input type="text" name="photos[<%= index %>][url]" class="form-control" value="<%= photo.url %>">
+
+                      <label class="form-label">Descripción</label>
+                      <input type="text" name="photos[<%= index %>][description]" class="form-control"
+                        value="<%= photo.description %>">
+
+                      <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" name="photos[<%= index %>][isMain]" value="true"
+                          <%=photo.isMain ? 'checked' : '' %>>
+                        <label class="form-check-label">Foto principal</label>
+                      </div>
                     </div>
-                  </div>
-                  <% }) %>
-                    <% } else { %>
-                      <% for (let i=0; i < 4; i++) { %>
-                        <div class="col-md-6">
-                          <label class="form-label">URL foto <%= i + 1 %></label>
-                          <input type="text" name="photos[<%= i %>][url]" class="form-control" value="">
+                    <% }) %>
+                      <% } else { %>
+                        <% for (let i=0; i < 4; i++) { %>
+                          <div class="col-md-6">
+                            <label class="form-label">URL foto <%= i + 1 %></label>
+                            <input type="text" name="photos[<%= i %>][url]" class="form-control" value="">
 
-                          <label class="form-label">Descripción</label>
-                          <input type="text" name="photos[<%= i %>][description]" class="form-control" value="">
+                            <label class="form-label">Descripción</label>
+                            <input type="text" name="photos[<%= i %>][description]" class="form-control" value="">
 
-                          <div class="form-check mt-2">
-                            <input class="form-check-input" type="radio" name="mainPhoto" id="mainPhoto<%= i %>"
-                              value="<%= i %>">
-                            <label class="form-check-label" for="mainPhoto<%= i %>">Foto principal</label>
+                            <div class="form-check mt-2">
+                              <input class="form-check-input" type="radio" name="mainPhoto" id="mainPhoto<%= i %>"
+                                value="<%= i %>">
+                              <label class="form-check-label" for="mainPhoto<%= i %>">Foto principal</label>
+                            </div>
                           </div>
-                        </div>
-                        <% } %>
                           <% } %>
+                            <% } %>
 
 
-                            <%# Si no es edición, mostramos un campo vacío %>
-                              <div class="col-12 text-center mt-4">
-                                <button type="submit" class="btn btn-success px-5">
-                                  <%= editMode ? "Actualizar" : "Añadir apartamento" %>
-                                </button>
-                              </div>
+                              <%# Si no es edición, mostramos un campo vacío %>
+                                <div class="col-12 text-center mt-4">
+                                  <button type="submit" class="btn btn-success px-5">
+                                    <%= editMode ? "Actualizar" : "Añadir apartamento" %>
+                                  </button>
+                                </div>
     </form>
 
     <% if (editMode) { %>

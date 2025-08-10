@@ -11,74 +11,109 @@
         <%- include('./partials/header.ejs') %>
     </header>
 
+    <!-- Hero a pantalla completa (full width) -->
+    <section class="hero-search mb-5">
+        <div class="hero-search__overlay py-5">
+            <div class="container">
+                <h1 class="text-center text-white mb-4">Reserva tu apartamento en Book Joy</h1>
+
+                <div class="card shadow-sm hero-search__card mx-auto">
+                    <div class="card-body">
+
+                        <!-- Formulario para buscar el apartamento (mantiene los mismos names que usa el controlador) -->
+                        <form action="/search" method="get" class="row g-3 mb-0">
+
+                            <!-- Huéspedes (capacidad mínima) -->
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <label for="guests" class="form-label">Huéspedes</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-user-group"></i></span>
+                                    <input type="number" min="1" name="guests" id="guests" class="form-control"
+                                        value="<%= filters?.guests || '' %>">
+                                </div>
+                            </div>
+
+                            <!-- Ciudad -->
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <label for="city" class="form-label">Ciudad</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+                                    <input type="text" name="city" id="city" class="form-control"
+                                        value="<%= filters?.city || '' %>">
+                                </div>
+                            </div>
+
+                            <!-- Fechas -->
+                            <!-- Fecha de entrada -->
+                            <div class="col-6 col-md-2">
+                                <label for="startDate" class="form-label">Entrada</label>
+                                <input type="date" class="form-control" name="startDate" id="startDate"
+                                    value="<%= filters?.startDate || '' %>">
+                            </div>
+
+                            <!-- Fecha de salida -->
+                            <div class="col-6 col-md-2">
+                                <label for="endDate" class="form-label">Salida</label>
+                                <input type="date" class="form-control" name="endDate" id="endDate"
+                                    value="<%= filters?.endDate || '' %>">
+                            </div>
+
+                            <!-- Precio -->
+                            <div class="col-6 col-md-1">
+                                <label for="minPrice" class="form-label">Mín (€)</label>
+                                <input type="number" min="0" name="minPrice" id="minPrice" class="form-control"
+                                    value="<%= filters?.minPrice || '' %>">
+                            </div>
+                            <div class="col-6 col-md-1">
+                                <label for="maxPrice" class="form-label">Máx (€)</label>
+                                <input type="number" min="0" name="maxPrice" id="maxPrice" class="form-control"
+                                    value="<%= filters?.maxPrice || '' %>">
+                            </div>
+
+                            <!-- Ordenar -->
+                            <div class="col-12 col-md-3">
+                                <label for="sort" class="form-label">Ordenar por</label>
+                                <select name="sort" id="sort" class="form-select">
+                                    <option value="">—</option>
+                                    <option value="price_asc" <%=(filters?.sort==='price_asc' ) ? 'selected' : '' %>
+                                        >Precio ↑</option>
+                                    <option value="price_desc" <%=(filters?.sort==='price_desc' ) ? 'selected' : '' %>
+                                        >Precio ↓</option>
+                                    <option value="m2_asc" <%=(filters?.sort==='m2_asc' ) ? 'selected' : '' %>>m² ↑
+                                    </option>
+                                    <option value="m2_desc" <%=(filters?.sort==='m2_desc' ) ? 'selected' : '' %>>m² ↓
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="col-12 col-md-3 d-flex gap-2 align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa-solid fa-magnifying-glass me-1"></i> Buscar
+                                </button>
+                                <a href="/" class="btn btn-outline-secondary" title="Limpiar filtros">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </a>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Contador de resultados -->
+                <div class="text-center mt-3">
+                    <span class="badge bg-light text-dark">
+                        <strong>
+                            <%= (allApartments && allApartments.length) || 0 %>
+                        </strong> resultados
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Grid de apartamentos -->
     <main class="container my-5">
-
-        <!-- Filtro de búsqueda -->
-        <section class="mb-5">
-            <h1 class="text-center mb-4">Reserva tu apartamento en Book Joy</h1>
-
-            <form action="/search" method="get" class="row g-3 mb-4">
-
-                <!-- Huéspedes (capacidad mínima) -->
-                <div class="col-12 col-sm-6 col-md-3">
-                    <label for="guests" class="form-label">Huéspedes</label>
-                    <input type="number" min="1" name="guests" id="guests" class="form-control"
-                        value="<%= filters?.guests || '' %>">
-                </div>
-
-                <!-- Ciudad -->
-                <div class="col-12 col-sm-6 col-md-3">
-                    <label for="city" class="form-label">Ciudad</label>
-                    <input type="text" name="city" id="city" class="form-control" value="<%= filters?.city || '' %>">
-                </div>
-
-                <!-- Fechas -->
-
-                <!-- Fecha de entrada -->
-                <div class="col-md-3">
-                    <label for="startDate" class="form-label">Fecha de entrada</label>
-                    <input type="date" class="form-control" name="startDate" id="startDate">
-                </div>
-
-                <!-- Fecha de salida -->
-                <div class="col-md-3">
-                    <label for="endDate" class="form-label">Fecha de salida</label>
-                    <input type="date" class="form-control" name="endDate" id="endDate">
-                </div>
-
-                <!-- Precio -->
-                <div class="col-12 col-sm-6 col-md-3">
-                    <label for="minPrice" class="form-label">Precio mínimo</label>
-                    <input type="number" min="0" name="minPrice" id="minPrice" class="form-control"
-                        value="<%= filters?.minPrice || '' %>">
-                </div>
-                <div class="col-12 col-sm-6 col-md-3">
-                    <label for="maxPrice" class="form-label">Precio máximo</label>
-                    <input type="number" min="0" name="maxPrice" id="maxPrice" class="form-control"
-                        value="<%= filters?.maxPrice || '' %>">
-                </div>
-
-                <!-- Ordenar -->
-                <div class="col-12 col-sm-6 col-md-3">
-                    <label for="sort" class="form-label">Ordenar por</label>
-                    <select name="sort" id="sort" class="form-select">
-                        <option value="">-- Sin orden --</option>
-                        <option value="price_asc" <%=filters?.sort==='price_asc' ? 'selected' : '' %>>Precio ↑</option>
-                        <option value="price_desc" <%=filters?.sort==='price_desc' ? 'selected' : '' %>>Precio ↓
-                        </option>
-                        <option value="m2_asc" <%=filters?.sort==='m2_asc' ? 'selected' : '' %>>m² ↑</option>
-                        <option value="m2_desc" <%=filters?.sort==='m2_desc' ? 'selected' : '' %>>m² ↓</option>
-                    </select>
-                </div>
-
-                <div class="col-12 col-sm-6 col-md-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">Buscar</button>
-                </div>
-            </form>
-
-        </section>
-
-        <!-- Grid de apartamentos -->
         <section class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             <% allApartments.forEach(function(apt) { const mainPhoto=apt.photos?.find(p=> p.isMain) || apt.photos?.[0]
                 || {};

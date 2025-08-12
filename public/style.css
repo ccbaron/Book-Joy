@@ -19,12 +19,14 @@ body {
   border-left: 6px solid #2196F3;
 }
 
+/* Estilo para el encabezado */
 .navigation-menu {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+/* Estilo para el título de la página */
 .reservations-block {
   margin-top: 2rem;
   padding: 1rem;
@@ -42,6 +44,7 @@ body {
   font-weight: bold;
 }
 
+/* Estilo para el formulario de búsqueda */
 .search-form {
   display: grid;
   gap: 1rem;

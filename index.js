@@ -2,6 +2,7 @@ import express from 'express';
 import { connectDB } from './utils/db.js';
 import session from 'express-session';
 import cors from 'cors';
+import 'dotenv/config'; // Para que las variables de .env funcionen en local
 
 // importamos del fichero correspondiente todas las rutas que tienen que ver con los usuarios generales
 import indexRoutes  from './routes/indexRoutes.js'; 
@@ -16,18 +17,24 @@ import authRoutes from './routes/authRoutes.js';
 import apiRoutes from './routes/apiRoutes.js';
 
 // Creamos una instancia de express para definir los endpoints
-
 const app = express();
 
 // Poder procesar información de los formularios
 app.use(express.urlencoded({extended: true}));
 
+// Esto es necesario en Render para que funcione correctamente la cookie de sesión
+app.set('trust proxy', 1);
+
 // Configurar sesión
 app.use(session({
-    secret: 'miSecretoSuperSecreto',
+    // Usamos el valor de .env si existe, o un valor por defecto en local
+    secret: process.env.SESSION_SECRET || 'miSecretoSuperSecreto',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // secure: true en producción con HTTPS
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production', // En producción, solo por HTTPS
+        sameSite: 'lax'
+    }
 }));
 
 // Vamos a configurar unas variables para que SIEMPRE esten disponibles en todas las vistas, sin tenerlas que pasar de forma explícita des de el controlador
@@ -54,7 +61,6 @@ app.use('/admin', (req, res, next) => {
     }
 });
 
-
 // Usar la carpeta public para obtener recursos 
 app.use(express.static('public'));
 
@@ -63,12 +69,12 @@ app.use("/admin", adminRoutes); // todas las rutas que se encuentran en adminRou
 app.use("/api", cors(), apiRoutes);
 app.use(authRoutes);
 
-// Conectarnos al a base de datos
-// top-leve await
+// Conectarnos a la base de datos
+// top-level await
 await connectDB();
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, ()=> {
     console.log(`Escuchando peticiones en el puerto http://localhost:${PORT}`);
-})
+});

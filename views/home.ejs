@@ -119,9 +119,18 @@
                 || {};
                 %>
                 <div class="col">
-                    <div class="card h-100 shadow-sm">
+                    
+                    <%# Card del apartamento (position-relative para poder ubicar el badge encima) %>
+                    <div class="card h-100 shadow-sm position-relative">
+                        <%# Badge de ciudad (esquina superior izquierda) %>
+                        <span class="badge bg-dark text-uppercase fw-semibold position-absolute"
+                            style="top:.5rem; left:.5rem; letter-spacing:.02em;">
+                            <%= apt.location?.city || 'Sin ciudad' %>
+                        </span>
+
                         <img src="<%= mainPhoto.url || '/placeholder.jpg' %>" class="card-img-top"
                             alt="<%= apt.title %>">
+
 
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">
@@ -157,7 +166,8 @@
                                                                 <% } %>
 
                                                                     <% if (apt.services?.heating) { %>
-                                                                        <span title="Calefacción"><i class="fa-solid fa-fire"></i></span>
+                                                                        <span title="Calefacción"><i
+                                                                                class="fa-solid fa-fire"></i></span>
                                                                         <% } %>
 
                                                                             <% if (apt.services?.tv) { %>

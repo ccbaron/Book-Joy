@@ -169,17 +169,17 @@
                         <% }) %>
                           <% } else { %>
                             <% for (let i=0; i < 4; i++) { %>
-                              <div class="col-md-6">
+                              <div class="col-md-6 mb-3">
                                 <label class="form-label">URL foto <%= i + 1 %></label>
-                                <input type="text" name="photos[<%= i %>][url]" class="form-control" value="">
+                                <input type="text" name="photos[<%= i %>][url]" class="form-control mb-2" value="">
 
                                 <label class="form-label">Descripción</label>
                                 <input type="text" name="photos[<%= i %>][description]" class="form-control" value="">
 
                                 <div class="form-check mt-2">
-                                  <input class="form-check-input" type="radio" name="mainPhoto" id="mainPhoto<%= i %>"
-                                    value="<%= i %>">
-                                  <label class="form-check-label" for="mainPhoto<%= i %>">Foto principal</label>
+                                  <input class="form-check-input js-main-photo" type="checkbox"
+                                    name="photos[<%= i %>][isMain]" id="isMain<%= i %>" value="true">
+                                  <label class="form-check-label" for="isMain<%= i %>">Foto principal</label>
                                 </div>
                               </div>
                               <% } %>
@@ -216,6 +216,21 @@
           </div>
           <% } %>
   </main>
+  <script>
+    // Script para manejar la selección de fotos principales
+    // Solo permite seleccionar UNA foto principal
+    document.addEventListener('DOMContentLoaded', () => {
+      const checks = Array.from(document.querySelectorAll('.js-main-photo'));
+      checks.forEach(chk => {
+        chk.addEventListener('change', () => {
+          if (chk.checked) {
+            checks.forEach(other => { if (other !== chk) other.checked = false; });
+          }
+        });
+      });
+    });
+  </script>
+
 </body>
 
 </html>
